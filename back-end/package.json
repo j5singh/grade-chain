@@ -1,0 +1,17 @@
+{
+  "name": "grade-chain-backend",
+  "version": "1.0.0",
+  "description": "back-end using NodeJs for a front-end app",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Cipelli & Singh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
