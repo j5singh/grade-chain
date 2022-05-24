@@ -1,8 +1,16 @@
 const express = require('express');
 const app = express();
 
-app.get('/api', (req, res) => {
-    console.log(req.query)
-    res.send('Hello from API! You are ' + req.query.name + ' ' + req.query.surname)
+// MIDDLEWARES
+app.use(express.urlencoded({extended: true}));
+app.use(express.json()) // To parse the incoming requests with JSON payloads
+
+app.get('/', (req, res) => {
+    res.send('Hello from API!');
+})
+
+app.post('/api', (req, res) => {
+    res.send({msg: 'Hello from API! You are ' + req.body.name + ' ' + req.body.surname})
 });
+
 app.listen(3001, () => console.log('Server Running on port 3001'));
