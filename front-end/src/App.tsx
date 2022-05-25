@@ -10,7 +10,7 @@ function App() {
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData)
 
-    fetch('http://localhost:3000/api', {
+    fetch('/api', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
