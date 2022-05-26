@@ -1,41 +1,44 @@
+import { Box, Button, Flex, Heading, Input, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { FaMoon, FaPaperPlane, FaSun } from 'react-icons/fa';
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
 function App() {
-  const [response, setResponse] = React.useState(null);
+  const { toggleColorMode } = useColorMode();
+  const [theme, toggleTheme] = React.useState(false);
 
-  function handleSubmit(event:any) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData)
-
-    fetch('/api', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(data => setResponse(data.msg));
-  }
+  const formBackground = useColorModeValue("gray.100", "gray.700");
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <form onSubmit={handleSubmit}>
-          <input type='text' name='name'></input><br/>
-          <input type='text' name='surname'></input><br/>
-          <button>Receive a message</button>
-        </form>
-        { response ? 
-          <>
-            <div>Some Response</div>
-            <p>{response}</p>
-          </>
-          : null }
-      </header>
-    </div>
+    <>
+      <Flex height={"100vh"} alignItems={"center"} justifyContent={"center"}>
+        <Flex direction={"column"}
+        background={formBackground}
+        p={12}
+        rounded={6}
+        position={"relative"}
+        >
+          <Heading mb={"6"}>Log In</Heading>
+          <Input placeholder='Email' variant={"outline"} mb={3} type={"email"}/>
+          <Input placeholder='Password' variant={"outline"} mb={6} type={"password"}/>
+          <Button rightIcon={<FaPaperPlane />} colorScheme={"teal"}>
+            Log In
+          </Button>
+
+          <Box
+            position={"absolute"}
+            top={2}
+            right={2}
+            cursor={"pointer"}
+            onClick={() => {
+              toggleColorMode();
+              toggleTheme(!theme);
+            }}
+          >
+            {theme ? <FaMoon /> : <FaSun />}
+          </Box>
+        </Flex>
+      </Flex>
+    </>
   );
 }
 
