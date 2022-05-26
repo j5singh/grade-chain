@@ -10,16 +10,21 @@ function App() {
 
   return (
     <>
-      <Flex height={"100vh"} alignItems={"center"} justifyContent={"center"}>
-        <Flex direction={"column"}
-        background={formBackground}
-        p={12}
-        rounded={6}
-        position={"relative"}
+      <Flex
+        height={"100vh"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <Flex
+          direction={"column"}
+          background={formBackground}
+          p={12}
+          rounded={6}
+          position={"relative"}
         >
           <Heading mb={"6"}>Log In</Heading>
-          <Input placeholder='Email' variant={"outline"} mb={3} type={"email"}/>
-          <Input placeholder='Password' variant={"outline"} mb={6} type={"password"}/>
+          <Input placeholder='Email' variant={"outline"} mb={3} type={"email"} />
+          <Input placeholder='Password' variant={"outline"} mb={6} type={"password"} />
           <Button rightIcon={<FaPaperPlane />} colorScheme={"teal"}>
             Log In
           </Button>
