@@ -1,17 +1,21 @@
+// IMPORTING REQUIRED LIBRARIES
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
-const User = require('./models/user')
 const bcrypt = require('bcrypt')
+require('dotenv').config();
 
-// MIDDLEWARES
-mongoose.connect('mongodb://localhost:27017/grade-chain', {
-    useNewUrlParser : true,
-    useUnifiedTopology : true,
-    useCreateIndex: true
-}, () => {
-    console.log("Connected to MongoDB")
-})
+//IMPORT MODELS
+const User = require('./models/user')
+
+// Connecting to the MongoDB database
+mongoose
+    .connect(process.env.DATABASE_URL, {
+        useNewUrlParser : true,
+        useUnifiedTopology : true
+    })
+    .then((db) => console.log("Connected successfully to MongoDB"))
+    .catch((err) => console.log("Connection to MongoDB refused: ", err.message))
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json()) // To parse the incoming requests with JSON payloads
@@ -27,23 +31,20 @@ app.post('/api', async (req, res) => {
 app.post('/api/login', async (req, res) => {
     const password = req.body.password
     const email = req.body.email
-    const response = await User.findOne({ email: email }, function (err, impacts) {
-        res.send(impacts)
-    } )
 
-    // try {
-    //     const response = await User.find({})
-    //     res.send(response)
+    // Could add .lean() at the end if you don't want the default values
+    const response = await User.findOne({email: email})
 
-    //     if(bcrypt.compare(password, response.password)) {
-    //         res.send(response)
-    //         console.log('Ritorno della query ', response)
-    //     }
-    // } catch(err) {
-    //     console.log(err)
-    //     return res.json({ status : err})
-    // }
+    if (!response) {
+        return res.send({ result_msg: "The inserted credentials do not seem to match any record on our database!", status: "ERROR", result_data: {} })
+    }
+
+    if (await bcrypt.compare(password, response.password)) {
+        return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
+    }
+    // If you reach till here, it means that the email is found in the records but the password is incorrect
+    return res.send({ result_msg: "Invalid password!", status: "ERROR", result_data: {} })
 });
 
 
-app.listen(3001, () => console.log('Server Running on port 3001'));
+app.listen(process.env.PORT, () => console.log(`Server Running on: http://localhost:${process.env.PORT}`));
