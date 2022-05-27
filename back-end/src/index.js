@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
-const user = require('./models/user')
+const User = require('./models/user')
 const bcrypt = require('bcrypt')
 
 // MIDDLEWARES
@@ -25,10 +25,24 @@ app.post('/api', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
-    const username = req.body.username
     const password = req.body.password
-    const digest = await bcrypt.hash(password, 10)
-    res.send({'hash' : digest})
+    const email = req.body.email
+    const response = await User.findOne({ email: email }, function (err, impacts) {
+        res.send(impacts)
+    } )
+
+    // try {
+    //     const response = await User.find({})
+    //     res.send(response)
+
+    //     if(bcrypt.compare(password, response.password)) {
+    //         res.send(response)
+    //         console.log('Ritorno della query ', response)
+    //     }
+    // } catch(err) {
+    //     console.log(err)
+    //     return res.json({ status : err})
+    // }
 });
 
 
