@@ -43,8 +43,8 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     }
-  }, {collection: 'users'});
+}, {collection: 'users'});
 
-  const model = mongoose.model('UserSchema', UserSchema)
-  
-  module.exports = model
+const model = mongoose.model('UserSchema', UserSchema)
+
+module.exports = model
