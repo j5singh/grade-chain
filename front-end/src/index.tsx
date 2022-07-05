@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { extendTheme, ChakraProvider } from '@chakra-ui/react'
+import { AuthProvider } from './providers/authprovider';
 
 // Extend the theme to include custom colors, fonts, etc
 const colors = {
@@ -24,7 +25,9 @@ root.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>
