@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Dashboard from './components/dashboard';
 import Login from './components/login';
 import AuthenticationService from './services/authentication.service';
@@ -11,13 +11,13 @@ function App() {
   useEffect(() => {
     const user = AuthenticationService.getCurrentUser();
     setLogIn(user);
-  }, [isLoggedIn])
-  
-  if (!isLoggedIn) {
-    navigate("/login")
-  } else {
-    navigate("/")
-  }
+    
+    if (isLoggedIn) {
+      navigate("/")
+    } else {
+      navigate("/login")
+    }
+  }, [isLoggedIn, navigate])
 
   return (
       <Routes>
