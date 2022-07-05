@@ -4,7 +4,7 @@ const getCurrentUser = () => {
     return localStorage.getItem(Constants.COMPANY_KEY + '-userinfo');
 }
 
-const setUserInfo = (info: string) => {
+const setUserInfo = (info: any) => {
     localStorage.setItem(Constants.COMPANY_KEY + '-userinfo', info);
 }
 

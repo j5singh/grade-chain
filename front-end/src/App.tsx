@@ -1,29 +1,30 @@
 import React, { useEffect } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import Dashboard from './components/dashboard';
 import Login from './components/login';
 import AuthenticationService from './services/authentication.service';
 
 function App() {
   const [isLoggedIn, setLogIn] = React.useState<string | null>(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const user = AuthenticationService.getCurrentUser();
     setLogIn(user);
   }, [isLoggedIn])
+  
+  if (!isLoggedIn) {
+    navigate("/login")
+  } else {
+    navigate("/")
+  }
 
-  return ( isLoggedIn ?
-    <>
+  return (
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<><h1>Page Not Found</h1></>}></Route>
       </Routes>
-    </>
-    :
-    <>
-      <Navigate to="/login" replace />
-    </>
   );
 }
 
