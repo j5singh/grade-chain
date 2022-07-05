@@ -13,8 +13,8 @@ interface Error {
 function Login() {
     const { toggleColorMode } = useColorMode();
     const [theme, toggleTheme] = React.useState(false);
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const [email, setEmail] = React.useState("lorenzio.cipelli@studenti.unipr.it");
+    const [password, setPassword] = React.useState("san benedetto");
     const [errors, setError] = React.useState<Error>()
 
     const navigate = useNavigate()
@@ -35,7 +35,7 @@ function Login() {
             if (data.status == "ERROR") {
                 setError(data)
             } else {
-                AuthenticationService.setUserInfo(JSON.stringify(data.result_data))
+                AuthenticationService.setUserInfo(data.result_data.token)
                 navigate("/")
             }
         });
