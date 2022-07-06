@@ -3,6 +3,8 @@ import { FaMoon, FaPaperPlane, FaSun } from 'react-icons/fa';
 import React from 'react';
 import AuthenticationService from '../../services/authentication.service';
 import { Navigate, useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
+import User from '../../models/user';
 
 interface Error {
     result_data: any,
@@ -16,6 +18,8 @@ function Login() {
     const [email, setEmail] = React.useState("lorenzio.cipelli@studenti.unipr.it");
     const [password, setPassword] = React.useState("san benedetto");
     const [errors, setError] = React.useState<Error>()
+
+    const { auth, setAuth } = useAuth()
 
     const navigate = useNavigate()
 
@@ -35,7 +39,15 @@ function Login() {
             if (data.status == "ERROR") {
                 setError(data)
             } else {
-                AuthenticationService.setUserInfo(data.result_data.token)
+                let parseObj:User = data.result_data
+                setAuth({
+                    name: parseObj.name,
+                    surname: parseObj.surname,
+                    email: parseObj.email,
+                    roles: parseObj.roles,
+                    token: parseObj.token,
+                    password: parseObj.password
+                })
                 navigate("/")
             }
         });
@@ -56,7 +68,6 @@ function Login() {
                     p={12}
                     rounded={6}
                     position={"relative"}
-                    width={"25vw"}
                 >
                     <Heading mb={"6"}>Log In</Heading>
                     <Input 

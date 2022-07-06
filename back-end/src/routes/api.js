@@ -60,7 +60,8 @@ router.post('/login', async (req, res) => {
 
     if (await bcrypt.compare(password, response.password)) {
         await User.findByIdAndUpdate(response._id, { token: token })
-        return res.send({ result_msg: "OK", status: "SUCCESS", result_data: {token: token} })
+        response.token = token
+        return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
     }
     // If you reach till here, it means that the email is found in the records but the password is incorrect
     return res.send({ result_msg: "Invalid password!", status: "ERROR", result_data: {} })

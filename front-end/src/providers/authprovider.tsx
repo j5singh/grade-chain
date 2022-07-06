@@ -1,24 +1,16 @@
 import { createContext, ReactNode, useState } from "react";
+import User from "../models/user";
 
 interface ChildProps {
     children?: ReactNode,
 }
 
-interface AuthProps {
-    name: string,
-    surname: string,
-    email: string,
-    roles: string,
-    token: string,
-    password: string
-}
-
 interface IAuthContext {
-    auth: AuthProps;
-    setAuth: React.Dispatch<React.SetStateAction<AuthProps>>;
+    auth: User;
+    setAuth: React.Dispatch<React.SetStateAction<User>>;
 }
 
-const DefaultAuth: AuthProps = {
+const DefaultAuth: User = {
     name: "",
     surname: "",
     email: "",
@@ -33,7 +25,7 @@ const AuthContext = createContext<IAuthContext>({
 });
 
 export const AuthProvider = ({ children }: ChildProps) => {
-    const [auth, setAuth] = useState<AuthProps>(DefaultAuth);
+    const [auth, setAuth] = useState<User>(DefaultAuth);
     const values = { auth, setAuth };
 
     return (
