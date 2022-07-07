@@ -23,6 +23,7 @@ function Dashboard() {
     
     return (
         <>
+            {/* Navbar (top) */}
             <Flex 
                 pos={"fixed"}
                 right="1rem"
@@ -86,23 +87,23 @@ function Dashboard() {
                     </Menu>
                 </Box>
             </Flex>
-
             <Flex
-                h="100hv"
-                flexDir="row"
+                h={[null, null, "100vh"]}
+                maxW="2000px"
+                flexDir={["column", "column", "row"]}
                 overflow="hidden"
             >
                 {/* SideBar */}
                 <Flex
-                    w="20%"
+                    w={["100%", "100%", "10%", "15%", "15%"]}
                     flexDir="column"
                     alignItems="center"
                     backgroundColor={navBarColor}
                     color={textColor}
-                    paddingLeft={2}
                 >
                     <Flex
                         flexDir={"column"}
+                        h={[null, null, "100vh"]}
                         justifyContent="space-between"
                     >
                         <Flex
@@ -110,62 +111,78 @@ function Dashboard() {
                             as="nav"
                         >
                             <Heading
-                                marginTop={50}
-                                marginBottom={100}
-                                fontSize="4xl"
+                                mt={50}
+                                mb={[25, 50, 100]}
+                                fontSize={["4xl", "4xl", "2xl", "3xl", "4xl",]}
                                 alignSelf={"center"}
                                 letterSpacing="tight"
                             >
                                 Grade Chain
                             </Heading>
                             <Flex
-                                flexDir={"column"}
-                                alignItems="flex-start"
-                                justifyContent={"center"}
+                                flexDir={["row", "row", "column", "column", "column"]}
+                                align={["center", "center", "center", "flex-start", "flex-start"]}
+                                wrap={["wrap", "wrap", "nowrap", "nowrap", "nowrap"]}
+                                justifyContent="center"
                             >
-                                <Flex className="sidebar-items">
-                                    <Link>
+                                <Flex className="sidebar-items" mr={[2, 6, 0, 0, 0]}>
+                                    <Link display={["none", "none", "flex", "flex", "flex"]}>
                                         <Icon as={FiHome} fontSize="2xl" className="active-icon" />
                                     </Link>
-                                    <Link _hover={{textDecor: 'none'}}>
+                                    <Link _hover={{ textDecor: 'none' }} display={["flex", "flex", "none", "flex", "flex"]}>
                                         <Text className="active">Home</Text>
                                     </Link>
                                 </Flex>
-                                <Flex className="sidebar-items">
-                                    <Link>
+                                <Flex className="sidebar-items" mr={[2, 6, 0, 0, 0]}>
+                                    <Link display={["none", "none", "flex", "flex", "flex"]}>
                                         <Icon as={FiBookOpen} fontSize="2xl" />
                                     </Link>
-                                    <Link _hover={{textDecor: 'none'}}>
-                                        <Text >Register</Text>
+                                    <Link _hover={{ textDecor: 'none' }} display={["flex", "flex", "none", "flex", "flex"]}>
+                                        <Text>Register</Text>
                                     </Link>
                                 </Flex>
-                                <Flex className="sidebar-items">
-                                    <Link>
+                                <Flex className="sidebar-items" mr={[2, 6, 0, 0, 0]}>
+                                    <Link display={["none", "none", "flex", "flex", "flex"]}>
                                         <Icon as={FiAlertTriangle} fontSize="2xl" />
                                     </Link>
-                                    <Link _hover={{textDecor: 'none'}}>
-                                        <Text >Results</Text>
+                                    <Link _hover={{ textDecor: 'none' }} display={["flex", "flex", "none", "flex", "flex"]}>
+                                        <Text>Results</Text>
                                     </Link>
                                 </Flex>
                             </Flex>
+                        </Flex>
+                        <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
+                            <Avatar my={2} src="avatar-1.jpg" />
+                            <Text textAlign="center">{fullName}</Text>
                         </Flex>
                     </Flex>
                 </Flex>
 
                 {/* Center Part */}
                 <Flex
-                    w="80%"
+                    w="100%"
                     p="3%"
                     flexDir="column"
                     overflow="auto"
                     minH="100vh"
+                >
+                    <Heading
+                        fontWeight={"normal"}
+                        mb={4}
+                        letterSpacing="tight"
                     >
-                    <Heading fontWeight={"normal"} mb={4} letterSpacing="tight">Welcome back, <Flex fontWeight={"bold"} display="inline-flex">{auth.name}</Flex></Heading>
+                        Welcome back, <Flex fontWeight={"bold"} display="inline-flex">{auth.name}</Flex>
+                    </Heading>
                     <Text fontSize={"md"}> Arithmetic Mean : </Text>
                     <Text fontWeight={"bold"} fontSize="2xl"> 28.1 </Text>
                     <Box pt={2}>
                         <MyChart/>
                     </Box> 
+                    <Flex justifyContent="space-between" mt={8}>
+                        <Flex align="flex-end">
+                            <Heading as="h2" size="lg" letterSpacing="tight">Latest Grades</Heading>
+                        </Flex>
+                    </Flex>
                     <Flex flexDir={"column"}>
                         <Flex overflow={"auto"}>
                             <Table variant="unstyled" mt={4} >

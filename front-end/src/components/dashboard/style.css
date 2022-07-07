@@ -32,3 +32,9 @@ html, body {
 .sidebar-items:not(:last-child) {
     margin-bottom: 1.5em;
 }
+
+@media only screen and (max-width: 767px) {
+    .sidebar-items {
+        margin-bottom: 0 !important;
+    }
+}
