@@ -1,8 +1,7 @@
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Flex, Heading, Input, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { FaMoon, FaPaperPlane, FaSun } from 'react-icons/fa';
 import React from 'react';
-import AuthenticationService from '../../services/authentication.service';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import User from '../../models/user';
 
@@ -19,7 +18,7 @@ function Login() {
     const [password, setPassword] = React.useState("san benedetto");
     const [errors, setError] = React.useState<Error>()
 
-    const { auth, setAuth } = useAuth()
+    const { setAuth } = useAuth()
 
     const navigate = useNavigate()
 
@@ -36,7 +35,7 @@ function Login() {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.status == "ERROR") {
+            if (data.status === "ERROR") {
                 setError(data)
             } else {
                 let parseObj:User = data.result_data
@@ -48,7 +47,7 @@ function Login() {
                     token: parseObj.token,
                     password: parseObj.password
                 })
-                navigate("/")
+                navigate("/dashboard")
             }
         });
     }

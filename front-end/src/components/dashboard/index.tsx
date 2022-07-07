@@ -1,9 +1,7 @@
-import { Button } from "@chakra-ui/react";
-import { useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 
 function Dashboard() {
-    const { auth, setAuth } = useAuth()
+    const { auth } = useAuth()
     
     return (
         <>
