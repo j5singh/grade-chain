@@ -1,4 +1,4 @@
-export const StudentGrades = [
+export const MockGradeData = [
     {
         courseName: "Teoria dei Segnali",
         exameDay: "26/01/2021",
