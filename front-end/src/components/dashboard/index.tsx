@@ -1,15 +1,23 @@
 import { Avatar, Text, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue, Box, Link, Icon, Thead, Table, Th, Tbody, Tr, Td } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { FiAlertTriangle, FiBookOpen, FiHome } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
 import "./style.css"
 import MyChart from "../chart/chart";
+import {StudentGrades} from "../chart/grades"
 
 function Dashboard() {
     const { auth, doLogout } = useAuth()
     const { toggleColorMode } = useColorMode();
     const [theme, toggleTheme] = React.useState(false);
+
+    // const [studentGrades, setStudentGrade] = useState({
+    //     labels: ['1° Year','2° Year','3° Year'],
+    //     dataset: [26, 25, 29],
+    //     borderColor: 'rgb(255, 99, 132)',
+    //     backgroundColor: 'rgba(255, 99, 132, 0.5)'
+    // })
     
     let menuBg = useColorModeValue("white", "navy.800");
     const textColor = useColorModeValue("white", "white");
@@ -23,7 +31,6 @@ function Dashboard() {
     
     return (
         <>
-            {/* Navbar (top) */}
             <Flex 
                 pos={"fixed"}
                 right="1rem"
@@ -87,23 +94,23 @@ function Dashboard() {
                     </Menu>
                 </Box>
             </Flex>
+
             <Flex
                 h={[null, null, "100vh"]}
-                maxW="2000px"
-                flexDir={["column", "column", "row"]}
+                flexDir="row"
                 overflow="hidden"
             >
                 {/* SideBar */}
                 <Flex
-                    w={["100%", "100%", "10%", "15%", "15%"]}
+                    w="20%"
                     flexDir="column"
                     alignItems="center"
                     backgroundColor={navBarColor}
                     color={textColor}
+                    paddingLeft={2}
                 >
                     <Flex
                         flexDir={"column"}
-                        h={[null, null, "100vh"]}
                         justifyContent="space-between"
                     >
                         <Flex
@@ -111,78 +118,63 @@ function Dashboard() {
                             as="nav"
                         >
                             <Heading
-                                mt={50}
-                                mb={[25, 50, 100]}
-                                fontSize={["4xl", "4xl", "2xl", "3xl", "4xl",]}
+                                marginTop={50}
+                                marginBottom={100}
+                                fontSize="4xl"
                                 alignSelf={"center"}
                                 letterSpacing="tight"
                             >
                                 Grade Chain
                             </Heading>
                             <Flex
-                                flexDir={["row", "row", "column", "column", "column"]}
-                                align={["center", "center", "center", "flex-start", "flex-start"]}
-                                wrap={["wrap", "wrap", "nowrap", "nowrap", "nowrap"]}
-                                justifyContent="center"
+                                flexDir={"column"}
+                                alignItems="flex-start"
+                                justifyContent={"center"}
                             >
-                                <Flex className="sidebar-items" mr={[2, 6, 0, 0, 0]}>
-                                    <Link display={["none", "none", "flex", "flex", "flex"]}>
+                                <Flex className="sidebar-items">
+                                    <Link>
                                         <Icon as={FiHome} fontSize="2xl" className="active-icon" />
                                     </Link>
-                                    <Link _hover={{ textDecor: 'none' }} display={["flex", "flex", "none", "flex", "flex"]}>
+                                    <Link _hover={{textDecor: 'none'}}>
                                         <Text className="active">Home</Text>
                                     </Link>
                                 </Flex>
-                                <Flex className="sidebar-items" mr={[2, 6, 0, 0, 0]}>
-                                    <Link display={["none", "none", "flex", "flex", "flex"]}>
+                                <Flex className="sidebar-items">
+                                    <Link>
                                         <Icon as={FiBookOpen} fontSize="2xl" />
                                     </Link>
-                                    <Link _hover={{ textDecor: 'none' }} display={["flex", "flex", "none", "flex", "flex"]}>
-                                        <Text>Register</Text>
+                                    <Link _hover={{textDecor: 'none'}}>
+                                        <Text >Register</Text>
                                     </Link>
                                 </Flex>
-                                <Flex className="sidebar-items" mr={[2, 6, 0, 0, 0]}>
-                                    <Link display={["none", "none", "flex", "flex", "flex"]}>
+                                <Flex className="sidebar-items">
+                                    <Link>
                                         <Icon as={FiAlertTriangle} fontSize="2xl" />
                                     </Link>
-                                    <Link _hover={{ textDecor: 'none' }} display={["flex", "flex", "none", "flex", "flex"]}>
-                                        <Text>Results</Text>
+                                    <Link _hover={{textDecor: 'none'}}>
+                                        <Text >Results</Text>
                                     </Link>
                                 </Flex>
                             </Flex>
-                        </Flex>
-                        <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
-                            <Avatar my={2} src="avatar-1.jpg" />
-                            <Text textAlign="center">{fullName}</Text>
                         </Flex>
                     </Flex>
                 </Flex>
 
                 {/* Center Part */}
                 <Flex
-                    w="100%"
+                    w="80%"
                     p="3%"
                     flexDir="column"
                     overflow="auto"
                     minH="100vh"
-                >
-                    <Heading
-                        fontWeight={"normal"}
-                        mb={4}
-                        letterSpacing="tight"
                     >
-                        Welcome back, <Flex fontWeight={"bold"} display="inline-flex">{auth.name}</Flex>
-                    </Heading>
+                    <Heading fontWeight={"normal"} mb={4} letterSpacing="tight">Welcome back, <Flex fontWeight={"bold"} display="inline-flex">{auth.name}</Flex></Heading>
                     <Text fontSize={"md"}> Arithmetic Mean : </Text>
                     <Text fontWeight={"bold"} fontSize="2xl"> 28.1 </Text>
                     <Box pt={2}>
-                        <MyChart/>
+                        {/* <MyChart chartData={studentGrades}/> */}
+                        <MyChart />
                     </Box> 
-                    <Flex justifyContent="space-between" mt={8}>
-                        <Flex align="flex-end">
-                            <Heading as="h2" size="lg" letterSpacing="tight">Latest Grades</Heading>
-                        </Flex>
-                    </Flex>
                     <Flex flexDir={"column"}>
                         <Flex overflow={"auto"}>
                             <Table variant="unstyled" mt={4} >

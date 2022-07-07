@@ -3,67 +3,55 @@ import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
     Legend,
   } from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import { useColorModeValue } from '@chakra-ui/react';
-
+  import { Bar } from 'react-chartjs-2';
+  
 ChartJS.register(
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
     Legend
-  );
+);
+
+export const data = {
+    labels: ['1° Year','2° Year','3° Year'],
+    datasets: [{
+        label: 'Mean',
+        data: [26, 25, 29],
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      }],
+  };
+
+const options = {
+    elements: {
+      bar: {
+        borderWidth: 2,
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'right' as const,
+      },
+      title: {
+        display: false,
+      },
+    },
+  };
+
+// function MyChart({chartData} : {chartData:any}) {
+//     return (<Bar options={options} data={chartData} />)
+// }
 
 function MyChart() {
-    const data = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [
-            {
-                label: 'Dataset 1',
-                lineTension: 0.5,
-                pointBackgroundColor: "pink",
-                pointBorderColor: "pink",
-                pointHoverBackgroundColor: "pink",
-                pointHoverBorderColor: "pink",
-                borderColor: "pink",
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                data: [500, 300, 400, 500, 800, 650, 700, 690, 1000, 1200, 1050, 1300],
-            }
-        ],
-    }
-    
-    const options = {
-        maintainAspectRatio: true,
-        scales: {
-            x: {
-                grid: {
-                    display: false,
-                },
-            },
-            y: {
-                grid: {
-                    borderDash: [3, 3],
-                },
-                // beginAtZero: true, // this works
-            },
-        },
-        plugins: {
-            legend: {
-                display: false
-            }
-        }
-    }
-
-    return (<Line options={options} data={data} />)
+    return (<Bar options={options} data={data} />)
 }
-
 
 export default MyChart
