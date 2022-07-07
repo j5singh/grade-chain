@@ -24,9 +24,8 @@ function Login() {
         e.preventDefault();
 
         const response = await doLogin(email, password);
-        if (response.status === "ERROR") {
-            setError(response)
-        } else {
+        setError(response)
+        if (response.status === "SUCCESS") {
             navigate("/dashboard")
         }
     }
@@ -65,8 +64,7 @@ function Login() {
                         colorScheme={"teal"}
                         onClick={handleSubmit}> Log In
                     </Button>
-                    { errors && errors.result_msg
-                        ?
+                    { errors && errors.result_msg && errors.status === "ERROR" &&
                         <Box pt={3}>                        
                             <Alert 
                                 status='error'
@@ -78,7 +76,7 @@ function Login() {
                                     <AlertDescription>{errors.result_msg}</AlertDescription>
                                 </Box>
                             </Alert>
-                        </Box> : null
+                        </Box>
                     }
                     <Box
                         position={"absolute"}
