@@ -42,45 +42,45 @@ function Dashboard() {
                     paddingLeft={3}>
                     <Menu>
                         <MenuButton p='0px'>
-                        <Avatar
-                            _hover={{ cursor: "pointer" }}
-                            color="gray.700"
-                            name={fullName}
-                            bg="gray.100"
-                            size='sm'
-                        />
+                            <Avatar
+                                _hover={{ cursor: "pointer" }}
+                                color="gray.700"
+                                name={fullName}
+                                bg="gray.100"
+                                size='sm'
+                            />
                         </MenuButton>
                         <MenuList
-                        boxShadow={shadow}
-                        p='0px'
-                        mt='10px'
-                        borderRadius='20px'
-                        bg={menuBg}
-                        border='none'>
-                        <Flex w='100%' mb='0px'>
-                            <Text
-                                ps='20px'
-                                pt='16px'
-                                pb='10px'
-                                w='100%'
-                                borderBottom='1px solid'
-                                borderColor={borderColor}
-                                fontSize='sm'
-                                fontWeight='700'
-                                color={textColor}>
-                                    👋&nbsp; Hey, {auth.name}
-                            </Text>
-                        </Flex>
-                        <Flex flexDirection='column' p='10px'>
-                            <MenuItem
-                                _hover={{ bg: "none" }}
-                                _focus={{ bg: "none" }}
-                                color='red.400'
-                                borderRadius='8px'
-                                px='14px'>
-                                <Text fontSize='sm'>Log out</Text>
-                            </MenuItem>
-                        </Flex>
+                            boxShadow={shadow}
+                            p='0px'
+                            mt='10px'
+                            borderRadius='20px'
+                            bg={menuBg}
+                            border='none'>
+                            <Flex w='100%' mb='0px'>
+                                <Text
+                                    ps='20px'
+                                    pt='16px'
+                                    pb='10px'
+                                    w='100%'
+                                    borderBottom='1px solid'
+                                    borderColor={borderColor}
+                                    fontSize='sm'
+                                    fontWeight='700'
+                                    color={textColor}>
+                                        👋&nbsp; Hey, {auth.name}
+                                </Text>
+                            </Flex>
+                            <Flex flexDirection='column' p='10px'>
+                                <MenuItem
+                                    _hover={{ bg: "none" }}
+                                    _focus={{ bg: "none" }}
+                                    color='red.400'
+                                    borderRadius='8px'
+                                    px='14px'>
+                                    <Text fontSize='sm'>Log out</Text>
+                                </MenuItem>
+                            </Flex>
                         </MenuList>
                     </Menu>
                 </Box>
@@ -95,7 +95,6 @@ function Dashboard() {
                 <Flex
                     w="20%"
                     flexDir="column"
-                    pos={"fixed"}
                     alignItems="center"
                     backgroundColor={navBarColor}
                     color={textColor}
@@ -151,7 +150,6 @@ function Dashboard() {
                         </Flex>
                     </Flex>
                 </Flex>
-                <Spacer/>
 
                 {/* Center Part */}
                 <Flex
@@ -171,9 +169,11 @@ function Dashboard() {
                         <Flex overflow={"auto"}>
                             <Table variant="unstyled" mt={4} >
                                 <Thead>
-                                    <Th>Subject</Th>
-                                    <Th isNumeric>Year</Th>
-                                    <Th isNumeric>Result</Th>
+                                    <Tr>
+                                        <Th>Subject</Th>
+                                        <Th isNumeric>Year</Th>
+                                        <Th isNumeric>Result</Th>
+                                    </Tr>
                                 </Thead>
                                 <Tbody>
                                     <Tr borderBottom={"1px"}>
