@@ -17,9 +17,8 @@ function Login() {
     const [email, setEmail] = React.useState("lorenzio.cipelli@studenti.unipr.it");
     const [password, setPassword] = React.useState("san benedetto");
     const [errors, setError] = React.useState<Error>()
-
+    const formBackground = useColorModeValue("gray.100", "gray.700");
     const { setAuth } = useAuth()
-
     const navigate = useNavigate()
 
     async function handleSubmit(e:any) {
@@ -51,8 +50,6 @@ function Login() {
             }
         });
     }
-
-    const formBackground = useColorModeValue("gray.100", "gray.700");
 
     return (
         <>
