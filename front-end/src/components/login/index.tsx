@@ -11,16 +11,17 @@ interface Error {
 }
 
 function Login() {
-    const { toggleColorMode } = useColorMode();
     const [theme, toggleTheme] = React.useState(false);
     const [email, setEmail] = React.useState("lorenzio.cipelli@studenti.unipr.it");
     const [password, setPassword] = React.useState("san benedetto");
-    const [errors, setError] = React.useState<Error>()
+    const [errors, setError] = React.useState<Error>();
     const [isLoading, setIsLoading] = React.useState(false);
 
     const formBackground = useColorModeValue("gray.100", "gray.700");
-    const { doLogin } = useAuth()
-    const navigate = useNavigate()
+    
+    const { toggleColorMode } = useColorMode();
+    const { doLogin } = useAuth();
+    const navigate = useNavigate();
 
     async function handleSubmit(e:any) {
         e.preventDefault();

@@ -1,3 +1,4 @@
+import { useToast } from "@chakra-ui/react";
 import { createContext, ReactNode, useState } from "react";
 import { Constants } from "../config/constants";
 import User from "../models/user";
@@ -46,6 +47,8 @@ const AuthContext = createContext<IAuthContext>({
 export const AuthProvider = ({ children }: ChildProps) => {
     const [auth, setAuth] = useState<User>(DefaultAuth);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    
+    const toast = useToast()
 
     const verifyToken = async () => {
         const token = localStorage.getItem(Constants.COMPANY_KEY + '-token');
@@ -70,6 +73,16 @@ export const AuthProvider = ({ children }: ChildProps) => {
                 password: parseObj.password
             })
             setIsAuthenticated(true);
+        } else {
+            // Means that the token is expired
+            toast({
+                title: 'Login expired.',
+                description: "Please proceed by relogging in!",
+                status: 'error',
+                duration: 4500,
+                isClosable: true,
+                position: 'bottom-right'
+            })
         }
         return data;
     }
@@ -96,6 +109,14 @@ export const AuthProvider = ({ children }: ChildProps) => {
             })
             setIsAuthenticated(true);
             localStorage.setItem(Constants.COMPANY_KEY + '-token', parseObj.token);
+
+            toast({
+                title: 'Logged in successfully.',
+                status: 'info',
+                duration: 4500,
+                isClosable: true,
+                position: 'bottom-right'
+            })
         }
         return data;
     }
@@ -103,6 +124,15 @@ export const AuthProvider = ({ children }: ChildProps) => {
     const doLogout = () => {
         setAuth(DefaultAuth);
         setIsAuthenticated(false);
+        localStorage.removeItem(Constants.COMPANY_KEY + '-token')
+
+        toast({
+            title: 'Logged out successfully.',
+            status: 'info',
+            duration: 4500,
+            isClosable: true,
+            position: 'bottom-right'
+        })
     }
 
     const values = { isAuthenticated, auth, verifyToken, doLogin, doLogout };
