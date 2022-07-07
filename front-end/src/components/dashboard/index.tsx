@@ -20,7 +20,7 @@ function Dashboard() {
     // })
     
     let menuBg = useColorModeValue("white", "navy.800");
-    const textColor = useColorModeValue("white", "white");
+    const textColor = useColorModeValue("black", "white");
     const navBarColor = useColorModeValue("#020202", "gray.700");
     const borderColor = useColorModeValue("#E6ECFA", "rgba(135, 140, 189, 0.3)");
     const shadow = useColorModeValue(
@@ -108,7 +108,7 @@ function Dashboard() {
                     flexDir="column"
                     alignItems="center"
                     backgroundColor={navBarColor}
-                    color={textColor}
+                    color="white"
                     paddingLeft={2}
                 >
                     <Flex
