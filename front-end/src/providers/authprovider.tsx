@@ -1,13 +1,29 @@
 import { createContext, ReactNode, useState } from "react";
+import { Constants } from "../config/constants";
 import User from "../models/user";
 
 interface ChildProps {
     children?: ReactNode,
 }
 
+interface IResponse {
+    status: string,
+    result_msg: string,
+    result_data: {}
+}
+
 interface IAuthContext {
-    auth: User;
-    setAuth: React.Dispatch<React.SetStateAction<User>>;
+    isAuthenticated: boolean,
+    auth: User,
+    verifyToken: () => Promise<IResponse>,
+    doLogin: (email: string, password: string) => Promise<IResponse>,
+    doLogout: () => void
+}
+
+const DefaultResponse: IResponse = {
+    status: "",
+    result_msg: "",
+    result_data: {}
 }
 
 const DefaultAuth: User = {
@@ -20,13 +36,76 @@ const DefaultAuth: User = {
 }
 
 const AuthContext = createContext<IAuthContext>({
+    isAuthenticated: false,
     auth: DefaultAuth,
-    setAuth: () => {}
+    verifyToken: async () => DefaultResponse,
+    doLogin: async () => DefaultResponse,
+    doLogout: () => {}
 });
 
 export const AuthProvider = ({ children }: ChildProps) => {
     const [auth, setAuth] = useState<User>(DefaultAuth);
-    const values = { auth, setAuth };
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    const verifyToken = async () => {
+        const token = localStorage.getItem(Constants.COMPANY_KEY + '-token');
+        if (!token) return {status: "ERROR", result_msg: "Token not found!", result_data: {}};
+
+        const response = await fetch('/api/verifytoken', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                token: token
+            }),
+        })
+        const data = await response.json()
+        if(data.status !== "ERROR") {
+            let parseObj: User = data.result_data
+            setAuth({
+                name: parseObj.name,
+                surname: parseObj.surname,
+                email: parseObj.email,
+                roles: parseObj.roles,
+                token: parseObj.token,
+                password: parseObj.password
+            })
+            setIsAuthenticated(true);
+        }
+        return data;
+    }
+
+    const doLogin = async (email: string, password: string) => {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+            }),
+        })
+        const data = await response.json();
+        if (data.status !== "ERROR") {
+            let parseObj: User = data.result_data
+            setAuth({
+                name: parseObj.name,
+                surname: parseObj.surname,
+                email: parseObj.email,
+                roles: parseObj.roles,
+                token: parseObj.token,
+                password: parseObj.password
+            })
+            setIsAuthenticated(true);
+            localStorage.setItem(Constants.COMPANY_KEY + '-token', parseObj.token);
+        }
+        return data;
+    }
+
+    const doLogout = () => {
+        setAuth(DefaultAuth);
+        setIsAuthenticated(false);
+    }
+
+    const values = { isAuthenticated, auth, verifyToken, doLogin, doLogout };
 
     return (
         <AuthContext.Provider value={values}>

@@ -18,37 +18,18 @@ function Login() {
     const [password, setPassword] = React.useState("san benedetto");
     const [errors, setError] = React.useState<Error>()
     const formBackground = useColorModeValue("gray.100", "gray.700");
-    const { setAuth } = useAuth()
+    const { doLogin } = useAuth()
     const navigate = useNavigate()
 
     async function handleSubmit(e:any) {
         e.preventDefault();
 
-        fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === "ERROR") {
-                setError(data)
-            } else {
-                let parseObj:User = data.result_data
-                setAuth({
-                    name: parseObj.name,
-                    surname: parseObj.surname,
-                    email: parseObj.email,
-                    roles: parseObj.roles,
-                    token: parseObj.token,
-                    password: parseObj.password
-                })
-                navigate("/dashboard")
-            }
-        });
+        const response = await doLogin(email, password);
+        if (response.status === "ERROR") {
+            setError(response)
+        } else {
+            navigate("/dashboard")
+        }
     }
 
     return (

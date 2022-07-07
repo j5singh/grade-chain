@@ -1,14 +1,33 @@
-import { Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Dashboard from './components/dashboard';
 import Login from './components/login';
 import { ProtectedRoute } from './components/protectedroute/protectedroute';
 import Register from './components/register';
+import useAuth from './hooks/useAuth';
 
 function App() {
   const ROLES = {
     'dashboard': 'user',
     'admin': 'admin',
   }
+
+  const { verifyToken } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const doVerifyToken = async () => {
+      const result = await verifyToken();
+      console.log(result)
+      if(result.status === "ERROR") {
+        navigate("/login")
+      } else {
+        navigate("/dashboard")
+      }
+    }
+
+    doVerifyToken();
+  }, [])
 
   return (
       <Routes>
