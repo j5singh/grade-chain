@@ -1,4 +1,4 @@
-import { Avatar, Text, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue, Box, Link, Icon } from "@chakra-ui/react";
+import { Avatar, Text, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue, Box, Link, Icon, Thead, Table, Th, Tbody, Tr, Td, Spacer } from "@chakra-ui/react";
 import React from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { FiAlertTriangle, FiBookOpen, FiHome } from "react-icons/fi";
@@ -93,12 +93,13 @@ function Dashboard() {
             >
                 {/* SideBar */}
                 <Flex
-                    h="100vh"
-                    w="15%"
+                    w="20%"
                     flexDir="column"
+                    pos={"fixed"}
                     alignItems="center"
                     backgroundColor={navBarColor}
                     color={textColor}
+                    paddingLeft={2}
                 >
                     <Flex
                         flexDir={"column"}
@@ -150,10 +151,11 @@ function Dashboard() {
                         </Flex>
                     </Flex>
                 </Flex>
+                <Spacer/>
 
                 {/* Center Part */}
                 <Flex
-                    w="85%"
+                    w="80%"
                     p="3%"
                     flexDir="column"
                     overflow="auto"
@@ -164,7 +166,68 @@ function Dashboard() {
                     <Text fontWeight={"bold"} fontSize="2xl"> 28.1 </Text>
                     <Box pt={2}>
                         <MyChart/>
-                    </Box>    
+                    </Box> 
+                    <Flex flexDir={"column"}>
+                        <Flex overflow={"auto"}>
+                            <Table variant="unstyled" mt={4} >
+                                <Thead>
+                                    <Th>Subject</Th>
+                                    <Th isNumeric>Year</Th>
+                                    <Th isNumeric>Result</Th>
+                                </Thead>
+                                <Tbody>
+                                    <Tr borderBottom={"1px"}>
+                                        <Td>
+                                            <Text fontWeight={"bold"}>Teoria dei Segnali</Text>
+                                            <Text fontWeight={"thin"}>26/01/2021</Text>
+                                        </Td>
+                                        <Td>2</Td>
+                                        <Td>24</Td>
+                                    </Tr>
+                                    <Tr borderBottom={"1px"}>
+                                        <Td>
+                                            <Text fontWeight={"bold"}>Analisi 1</Text>
+                                            <Text fontWeight={"thin"}>21/02/2020</Text>
+                                        </Td>
+                                        <Td>1</Td>
+                                        <Td>19</Td>
+                                    </Tr>
+                                    <Tr borderBottom={"1px"}>
+                                        <Td>
+                                            <Text fontWeight={"bold"}>Basi di Dati</Text>
+                                            <Text fontWeight={"thin"}>14/01/2022</Text>
+                                        </Td>
+                                        <Td>3</Td>
+                                        <Td>30</Td>
+                                    </Tr>
+                                    <Tr borderBottom={"1px"}>
+                                        <Td>
+                                            <Text fontWeight={"bold"}>Basi di Dati</Text>
+                                            <Text fontWeight={"thin"}>14/01/2022</Text>
+                                        </Td>
+                                        <Td>3</Td>
+                                        <Td>30</Td>
+                                    </Tr>
+                                    <Tr borderBottom={"1px"}>
+                                        <Td>
+                                            <Text fontWeight={"bold"}>Basi di Dati</Text>
+                                            <Text fontWeight={"thin"}>14/01/2022</Text>
+                                        </Td>
+                                        <Td>3</Td>
+                                        <Td>30</Td>
+                                    </Tr>
+                                    <Tr borderBottom={"1px"}>
+                                        <Td>
+                                            <Text fontWeight={"bold"}>Basi di Dati</Text>
+                                            <Text fontWeight={"thin"}>14/01/2022</Text>
+                                        </Td>
+                                        <Td>3</Td>
+                                        <Td>30</Td>
+                                    </Tr>
+                                </Tbody>
+                            </Table>
+                        </Flex>
+                    </Flex>  
                 </Flex>
             </Flex>
         </>
