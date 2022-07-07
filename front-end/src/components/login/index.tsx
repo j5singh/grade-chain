@@ -3,7 +3,6 @@ import { FaMoon, FaPaperPlane, FaSun } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import User from '../../models/user';
 
 interface Error {
     result_data: any,

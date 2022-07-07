@@ -1,4 +1,4 @@
-import { Avatar, Text, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue, Box, Link, Icon, Thead, Table, Th, Tbody, Tr, Td, Spacer } from "@chakra-ui/react";
+import { Avatar, Text, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue, Box, Link, Icon, Thead, Table, Th, Tbody, Tr, Td } from "@chakra-ui/react";
 import React from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { FiAlertTriangle, FiBookOpen, FiHome } from "react-icons/fi";
@@ -7,7 +7,7 @@ import "./style.css"
 import MyChart from "../chart/chart";
 
 function Dashboard() {
-    const { auth } = useAuth()
+    const { auth, doLogout } = useAuth()
     const { toggleColorMode } = useColorMode();
     const [theme, toggleTheme] = React.useState(false);
     
@@ -18,7 +18,7 @@ function Dashboard() {
     const shadow = useColorModeValue(
         "14px 17px 40px 4px rgba(112, 144, 176, 0.18)",
         "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
-      );
+    );
     const fullName = auth.name.concat(" ", auth.surname)
     
     return (
@@ -77,7 +77,8 @@ function Dashboard() {
                                     _focus={{ bg: "none" }}
                                     color='red.400'
                                     borderRadius='8px'
-                                    px='14px'>
+                                    px='14px'
+                                    onClick={doLogout}>
                                     <Text fontSize='sm'>Log out</Text>
                                 </MenuItem>
                             </Flex>

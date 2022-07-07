@@ -18,7 +18,6 @@ function App() {
   useEffect(() => {
     const doVerifyToken = async () => {
       const result = await verifyToken();
-      console.log(result)
       if(result.status === "ERROR") {
         navigate("/login")
       } else {
