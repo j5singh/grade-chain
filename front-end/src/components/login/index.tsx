@@ -16,6 +16,8 @@ function Login() {
     const [email, setEmail] = React.useState("lorenzio.cipelli@studenti.unipr.it");
     const [password, setPassword] = React.useState("san benedetto");
     const [errors, setError] = React.useState<Error>()
+    const [isLoading, setIsLoading] = React.useState(false);
+
     const formBackground = useColorModeValue("gray.100", "gray.700");
     const { doLogin } = useAuth()
     const navigate = useNavigate()
@@ -23,8 +25,11 @@ function Login() {
     async function handleSubmit(e:any) {
         e.preventDefault();
 
+        setIsLoading(true)
         const response = await doLogin(email, password);
         setError(response)
+        setIsLoading(false)
+        
         if (response.status === "SUCCESS") {
             navigate("/dashboard")
         }
@@ -62,7 +67,8 @@ function Login() {
                     <Button 
                         rightIcon={<FaPaperPlane />} 
                         colorScheme={"teal"}
-                        onClick={handleSubmit}> Log In
+                        onClick={handleSubmit}
+                        isLoading={isLoading}> Log In
                     </Button>
                     { errors && errors.result_msg && errors.status === "ERROR" &&
                         <Box pt={3}>                        
