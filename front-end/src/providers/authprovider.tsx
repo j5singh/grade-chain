@@ -14,7 +14,7 @@ interface IResponse {
 }
 
 interface IAuthContext {
-    isAuthenticated: boolean,
+    isAuthenticated: boolean | null,
     auth: User,
     verifyToken: () => Promise<IResponse>,
     doLogin: (email: string, password: string) => Promise<IResponse>,
@@ -37,7 +37,7 @@ const DefaultAuth: User = {
 }
 
 const AuthContext = createContext<IAuthContext>({
-    isAuthenticated: false,
+    isAuthenticated: null,
     auth: DefaultAuth,
     verifyToken: async () => DefaultResponse,
     doLogin: async () => DefaultResponse,
@@ -46,7 +46,7 @@ const AuthContext = createContext<IAuthContext>({
 
 export const AuthProvider = ({ children }: ChildProps) => {
     const [auth, setAuth] = useState<User>(DefaultAuth);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
     
     const toast = useToast()
 
