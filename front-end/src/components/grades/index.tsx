@@ -1,5 +1,5 @@
-import { Badge, Box } from "@chakra-ui/react"
-import { FaGraduationCap, FaStar } from "react-icons/fa"
+import { Image, Badge, Box } from "@chakra-ui/react"
+import { FaStar } from "react-icons/fa"
 
 export const Grades = () => {
     const property = {
@@ -15,7 +15,7 @@ export const Grades = () => {
 
     return (
         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-            <FaGraduationCap />
+            <Image src={property.imageUrl} alt={property.imageAlt} />
 
             <Box p='6'>
                 <Box display='flex' alignItems='baseline'>
