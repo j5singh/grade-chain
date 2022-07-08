@@ -13,18 +13,21 @@ function Dashboard() {
     const { toggleColorMode } = useColorMode();
     const [theme, toggleTheme] = React.useState(false);
 
-    function useRandomRgb() {
-        const max = 255
-        const min = 0
-        let toPass = [0,0,0]
+    // function useRandomRgb() {
+    //     const max = 255
+    //     const min = 0
+    //     let toPass = [0,0,0]
     
-        for (let i = 0 ; i < 3 ; i++) {
-            let x = Math.floor(Math.random() * (max - min + 1)) + min;
-            toPass.map(() => x)
-        }
+    //     for (let i = 0 ; i < 3 ; i++) {
+    //         let x = Math.floor(Math.random() * (max - min + 1)) + min;
+    //         toPass.map(() => x)
+    //     }
     
-        return toPass
-    }
+    //     return toPass
+    // }
+
+    const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
+    const randomRGB = () => `rgba(${randomNum()}, ${randomNum()}, ${randomNum()}, 0.5)`;
 
     const groupedByYear: any[] = MockGradeData.reduce((group: any, grade) => {
         // separate elements by year in different arrays
@@ -46,8 +49,7 @@ function Dashboard() {
         for (let i = 0 ; i < element.length ; i++) {
             let sub = {}
             let data = [0, 0, 0]
-            let rgb = useRandomRgb()
-            let backColor = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ", 0.5)"
+            let backColor = randomRGB()
 
             data[element[i]['year'] - 1] = element[i]['grade']
             sub = {
