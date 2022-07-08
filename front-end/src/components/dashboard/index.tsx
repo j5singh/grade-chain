@@ -12,9 +12,38 @@ function Dashboard() {
     const { toggleColorMode } = useColorMode();
     const [theme, toggleTheme] = React.useState(false);
 
-    const [studentGrades, setStudentGrade] = React.useState({
+    const groupedByYear: any[] = MockGradeData.reduce((group: any, grade) => {
+        // separate elements by year in different arrays
+        const { year } = grade;
+        group[year] = group[year] ?? [];
+        group[year].push(grade);
+
+        return group;
+      }, {});  
+
+    let means: number[] = []
+    let total: number = 0
+    let count: number = 0
+
+    // for each year calculate the mean
+    Object.values(groupedByYear).forEach((element: string | any[]) => {
+        let sum = 0
+        for (let i = 0 ; i < element.length ; i++) {
+            sum += element[i]['grade']
+        }
+
+        means.push(sum/element.length)
+    });
+
+    // calulate the total mean of the three years
+    means.forEach(function(value) {
+        total += value
+        count++
+    })
+
+    const [studentGrades] = React.useState({
         labels: ['1° Year','2° Year','3° Year'],
-        dataset: [26, 25, 29],
+        dataset: means,
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)'
     })
@@ -184,13 +213,14 @@ function Dashboard() {
                         Welcome back, <Flex fontWeight={"bold"} display="inline-flex">{auth.name}</Flex>
                     </Heading>
                     <Text fontSize={"md"}> Arithmetic Mean : </Text>
-                    <Text fontWeight={"bold"} fontSize="2xl"> 28.1 </Text>
+                    <Text fontWeight={"bold"} fontSize="2xl"> {Number(total / count).toFixed(2)} </Text>
                     <Box pt={2}>
                         <MyChart chartData={studentGrades}/>
                     </Box>
                     <Flex justifyContent="space-between" mt={8}>
                         <Flex align="flex-end">
                             <Heading as="h2" size="lg" letterSpacing="tight">Latest Grades</Heading>
+                            <Text fontWeight={"tight"}><Link>&nbsp;See All</Link></Text>
                         </Flex>
                     </Flex>
                     <Flex flexDir={"column"}>
@@ -204,7 +234,7 @@ function Dashboard() {
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {MockGradeData.map((item, i) => {
+                                    {MockGradeData.slice(0,3).map((item, i) => {
                                         return [
                                             <Tr key={i} borderBottom={"1px"}>
                                                 <Td>

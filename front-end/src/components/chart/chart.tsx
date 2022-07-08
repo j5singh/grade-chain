@@ -11,9 +11,14 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Grades',
     },
   },
+      scales: {
+        y: {
+          suggestedMin: 16, // minimum value
+          beginAtZero: false   // minimum value will be 0.
+          }
+      }
 };
 
 function BarChart({chartData} : {chartData:any}) {
