@@ -54,7 +54,7 @@ function Dashboard() {
             data[element[i]['year'] - 1] = element[i]['grade']
             sub = {
                 label: element[i]['courseName'],
-                borderColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 255, 255)',
                 backgroundColor: backColor,
                 data: data
             }

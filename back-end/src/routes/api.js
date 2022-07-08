@@ -6,6 +6,7 @@ require('dotenv').config();
 
 // IMPORT MODELS
 const User = require('../models/user')
+const Course = require('../models/course')
 
 // We are inside /api
 router.post('/', async (req, res) => {
@@ -85,5 +86,19 @@ router.post('/verifytoken', async (req, res) => {
 
     return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
 })
+
+// Take all courses
+router.post('/courses', async (req, res) => {
+    const userMail = req.body.mail
+
+    const response = await Course.find({}) 
+
+    if (!response) {
+        return res.send({ result_msg: "There was an error getting the courses!", status: "ERROR", result_data: {} })
+    }
+
+    return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
+})
+
 
 module.exports = router
