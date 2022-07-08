@@ -1,5 +1,6 @@
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import SkeletonCustom from '../../helpers/skeletoncustom';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -22,12 +23,13 @@ const options = {
 };
 
 function BarChart({chartData} : {chartData:any}) {
+  console.log(chartData)
   const data = {
     labels: chartData.labels,
     datasets: chartData.dataset
   };
   
-  return (<Bar options={options} data={data} />)
+  return ( chartData.average !== "0" ? <Bar options={options} data={data} /> : <SkeletonCustom />)
 }
 
 export default BarChart
