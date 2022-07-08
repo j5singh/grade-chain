@@ -56,7 +56,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign({
         email: response.email
-    }, process.env.JWT_SECRET, { expiresIn: 60 })
+    }, process.env.JWT_SECRET, { expiresIn: '1d' })
 
     if (await bcrypt.compare(password, response.password)) {
         await User.findByIdAndUpdate(response._id, { token: token })
