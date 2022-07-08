@@ -1,4 +1,4 @@
-import { Avatar, Text, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue, Box, Link, Icon, Thead, Table, Th, Tbody, Tr, Td } from "@chakra-ui/react";
+import { Avatar, Text, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue, Box, Link, Icon, Thead, Table, Th, Tbody, Tr, Td, Spacer, Grid } from "@chakra-ui/react";
 import React from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { FiAlertTriangle, FiBookOpen, FiHome } from "react-icons/fi";
@@ -12,6 +12,19 @@ function Dashboard() {
     const { toggleColorMode } = useColorMode();
     const [theme, toggleTheme] = React.useState(false);
 
+    function useRandomRgb() {
+        const max = 255
+        const min = 0
+        let toPass = [0,0,0]
+    
+        for (let i = 0 ; i < 3 ; i++) {
+            let x = Math.floor(Math.random() * (max - min + 1)) + min;
+            toPass.map(() => x)
+        }
+    
+        return toPass
+    }
+
     const groupedByYear: any[] = MockGradeData.reduce((group: any, grade) => {
         // separate elements by year in different arrays
         const { year } = grade;
@@ -24,12 +37,26 @@ function Dashboard() {
     let means: number[] = []
     let total: number = 0
     let count: number = 0
+    let dataset: any[] = []
 
     // for each year calculate the mean
     Object.values(groupedByYear).forEach((element: string | any[]) => {
         let sum = 0
         for (let i = 0 ; i < element.length ; i++) {
+            let sub = {}
+            let data = [0, 0, 0]
+            let rgb = useRandomRgb()
+            let backColor = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ", 0.5)"
+
+            data[element[i]['year'] - 1] = element[i]['grade']
+            sub = {
+                label: element[i]['courseName'],
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: backColor,
+                data: data
+            }
             sum += element[i]['grade']
+            dataset.push(sub)
         }
 
         means.push(sum/element.length)
@@ -42,10 +69,8 @@ function Dashboard() {
     })
 
     const [studentGrades] = React.useState({
-        labels: ['1° Year','2° Year','3° Year'],
-        dataset: means,
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)'
+        labels: [['1° Year'],['2° Year'],['3° Year']],
+        dataset: dataset,       
     })
     
     let menuBg = useColorModeValue("white", "navy.800");
@@ -214,9 +239,12 @@ function Dashboard() {
                     </Heading>
                     <Text fontSize={"md"}> Arithmetic Mean : </Text>
                     <Text fontWeight={"bold"} fontSize="2xl"> {Number(total / count).toFixed(2)} </Text>
-                    <Box pt={2}>
+                    <Grid 
+                        gap={"20px"} 
+                        alignItems={"center"}
+                        gridTemplateColumns="repeat(2, 1fr)">
                         <MyChart chartData={studentGrades}/>
-                    </Box>
+                    </Grid>
                     <Flex justifyContent="space-between" mt={8}>
                         <Flex align="flex-end">
                             <Heading as="h2" size="lg" letterSpacing="tight">Latest Grades</Heading>

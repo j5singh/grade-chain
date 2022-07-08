@@ -22,16 +22,9 @@ const options = {
 };
 
 function BarChart({chartData} : {chartData:any}) {
-  const labels = chartData.labels
   const data = {
-    labels,
-    datasets: [
-      {
-        label: 'Grade Average',
-        data: chartData.dataset,
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      }
-    ],
+    labels: chartData.labels,
+    datasets: chartData.dataset
   };
   
   return (<Bar options={options} data={data} />)
