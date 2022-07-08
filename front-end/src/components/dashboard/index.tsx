@@ -1,11 +1,12 @@
-import { Avatar, Text, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue, Box, Link, Icon, Thead, Table, Th, Tbody, Tr, Td, Spacer, Grid } from "@chakra-ui/react";
+import { Avatar, Text, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue, Box, Link, Icon, Thead, Table, Th, Tbody, Tr, Td, Spacer, Grid, Button } from "@chakra-ui/react";
 import React from "react";
-import { FaMoon, FaSun } from "react-icons/fa";
+import { FaAngleDoubleRight, FaMoon, FaSun } from "react-icons/fa";
 import { FiAlertTriangle, FiBookOpen, FiHome } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
 import "./style.css"
 import MyChart from "../chart/chart";
 import { MockGradeData } from "../chart/grades"
+import { Link as ReactLink } from "react-router-dom"
 
 function Dashboard() {
     const { auth, doLogout } = useAuth()
@@ -32,7 +33,7 @@ function Dashboard() {
         group[year].push(grade);
 
         return group;
-      }, {});  
+    }, {});  
 
     let means: number[] = []
     let total: number = 0
@@ -248,7 +249,11 @@ function Dashboard() {
                     <Flex justifyContent="space-between" mt={8}>
                         <Flex align="flex-end">
                             <Heading as="h2" size="lg" letterSpacing="tight">Latest Grades</Heading>
-                            <Text fontWeight={"tight"}><Link>&nbsp;See All</Link></Text>
+                        </Flex>
+                        <Flex align="flex-end">
+                            <Button rightIcon={<FaAngleDoubleRight />} colorScheme='pink' variant='solid'>
+                                <Link as={ReactLink} to="/grades">See All</Link>
+                            </Button>
                         </Flex>
                     </Flex>
                     <Flex flexDir={"column"}>

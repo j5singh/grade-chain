@@ -32,7 +32,7 @@ function Login() {
         setIsLoading(false)
         
         if (response.status === "SUCCESS") {
-            navigate("/dashboard")
+            navigate("/dashboard", { replace: true })
         }
     }
 
