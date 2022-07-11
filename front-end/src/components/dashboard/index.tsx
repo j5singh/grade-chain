@@ -203,7 +203,7 @@ function Dashboard() {
                                         <Icon as={FiBookOpen} fontSize="2xl" />
                                     </Link>
                                     <Link _hover={{ textDecor: 'none' }} display={["flex", "flex", "none", "flex", "flex"]}>
-                                        <Text>Register</Text>
+                                        <Text>Grades</Text>
                                     </Link>
                                 </Flex>
                                 <Flex className="sidebar-items" mr={[2, 6, 0, 0, 0]}>

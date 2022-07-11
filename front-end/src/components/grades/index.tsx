@@ -1,81 +1,70 @@
-import { Image, Badge, Box } from "@chakra-ui/react"
-import { FaStar } from "react-icons/fa"
+import { Badge, Box, Flex, VStack, Heading, HStack, Tag, Button, Container } from "@chakra-ui/react"
 
 export const Grades = () => {
-    const property = {
-        imageUrl: 'https://bit.ly/2Z4KKcF',
-        imageAlt: 'Rear view of modern home with pool',
-        beds: 3,
-        baths: 2,
-        title: 'Teoria dei Segnali',
-        formattedPrice: '$1,900.00',
-        reviewCount: 34,
-        rating: 4
-    }
 
     return (
-        <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-            <Image src={property.imageUrl} alt={property.imageAlt} />
-            <Box p='6'>
-                <Box 
-                    display='flex' 
-                    alignItems='baseline'
-                    >
-                    <Badge 
-                        borderRadius='full' 
-                        px='2' 
-                        colorScheme='teal'
-                        > New
-                    </Badge>
-                    <Box 
-                        color='gray.500' 
-                        fontWeight='semibold' 
-                        letterSpacing='wide' 
-                        fontSize='xs' 
-                        textTransform='uppercase' 
-                        ml='2'
-                        > {property.beds} beds &bull; 
-                        {property.baths} baths
-                    </Box>
-                </Box>
-                <Box 
-                    mt='1' 
-                    fontWeight='semibold' 
-                    as='h4' 
-                    lineHeight='tight'
-                    noOfLines={1}
-                    > {property.title} 
-                </Box>
-                <Box> { property.formattedPrice }
-                    <Box 
-                        as='span' 
-                        color='gray.600' 
-                        fontSize='sm'
+        <>
+            <Container
+                py={8}
+                px={0}
+                maxW='sm'
+            >
+                <Flex
+                    key={1}
+                    boxShadow="rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px"
+                    justifyContent="space-between"
+                    flexDirection="column"
+                    overflow="hidden"
+                    bg="base.d100"
+                    rounded={5}
+                    flex={1}
+                    p={5}
+                >
+                    <VStack mb={6}>
+                        <Heading
+                            fontSize={{ base: "xl", md: "2xl" }}
+                            textAlign="left"
+                            w="full"
+                            mb={2}
                         >
-                        / wk
-                    </Box>
-                </Box>
-                <Box
-                    display='flex' 
-                    mt='2' 
-                    alignItems='center'
-                    > {
-                        Array(5).fill('').map((_, i) => (
-                            <FaStar key={i}
-                                color={
-                                    i < property.rating ? 'teal.500' : 'gray.300'
-                                }/>
-                        ))
-                    }
-                    <Box
-                        as='span' 
-                        ml='2' 
-                        color='gray.600' 
-                        fontSize='sm'
-                        > {property.reviewCount} reviews
-                    </Box>
-                </Box>
-            </Box>
-        </Box>
+                            Teoria dei Segnali
+                        </Heading>
+                        <Box
+                            color='gray.500'
+                            fontWeight='semibold'
+                            letterSpacing='wide'
+                            fontSize='xs'
+                            textTransform='uppercase'
+                            ml='2'
+                        > IIET
+                        </Box>
+                    </VStack>
+
+                    <Flex justifyContent="space-between">
+                        <HStack spacing={2}>
+                            <Tag size="sm" variant="solid" colorScheme="green">
+                                29/30
+                            </Tag>
+                            <Tag size="sm" variant="outline" colorScheme="cyan">
+                                Vannucci
+                            </Tag>
+                            <Badge
+                                borderRadius='full'
+                                px='2'
+                                colorScheme='teal'
+                            > New
+                            </Badge>
+                        </HStack>
+                        <Button
+                            colorScheme="teal"
+                            fontWeight="bold"
+                            size="sm"
+                        >
+                            More
+                        </Button>
+                    </Flex>
+                </Flex>
+            </Container>
+        </>
     )
 }
