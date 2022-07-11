@@ -1,4 +1,5 @@
 interface User {
+    serialNumber: string,
     name: string,
     surname: string,
     email: string,

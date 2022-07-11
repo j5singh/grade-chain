@@ -100,7 +100,7 @@ router.post('/courses', async (req, res) => {
 })
 
 // Take grades of a student by his serial number
-router.post('/studentGrades', async (req, res) => {
+router.post('/studentgrades', async (req, res) => {
     const serialNumber = req.body.serialNumber
 
     const response = await Grade.find({ "transaction.student" : serialNumber}) 

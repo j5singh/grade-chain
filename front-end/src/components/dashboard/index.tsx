@@ -5,27 +5,39 @@ import { FiAlertTriangle, FiBookOpen, FiHome } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
 import "./style.css"
 import MyChart from "../chart/chart";
-import { MockGradeData } from "../chart/grades"
 import { Link as ReactLink } from "react-router-dom"
+import IGrades from "../../models/grades";
 
 function Dashboard() {
     const { auth, doLogout } = useAuth()
     const { toggleColorMode } = useColorMode();
     const [theme, toggleTheme] = React.useState(false);
-    const [studentGrades, setStudentGrades] = React.useState({labels: [['1° Year'],['2° Year'],['3° Year']], dataset: [[]], average: "0"})
+    const [gradesChartData, setGradesChartData] = React.useState({labels: [['1° Year'],['2° Year'],['3° Year']], dataset: [[]], average: "0"})
+    const [grades, setGrades] = React.useState<IGrades>()
 
     const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
     const randomRGB = () => `rgba(${randomNum()}, ${randomNum()}, ${randomNum()}, 0.5)`;
 
     useEffect(() => {
-        function getGrades() {
-            const groupedByYear: any[] = MockGradeData.reduce((group: any, grade) => {
+        async function getGrades() {
+            const response = await fetch('/api/studentgrades', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    serialNumber: auth.serialNumber
+                }),
+            })
+            const data = await response.json()
+            const gradesData = data.result_data
+            setGrades(gradesData)
+
+            const groupedByYear: any[] = gradesData.reduce((sortedBlocks: any, gradeBlock: any) => {
                 // separate elements by year in different arrays
-                const { year } = grade;
-                group[year] = group[year] ?? [];
-                group[year].push(grade);
+                const year = gradeBlock.transaction.year
+                sortedBlocks[year] = sortedBlocks[year] ?? [];
+                sortedBlocks[year].push(gradeBlock);
         
-                return group;
+                return sortedBlocks;
             }, {});
         
             let means: number[] = []
@@ -41,14 +53,14 @@ function Dashboard() {
                     let data = [0, 0, 0]
                     let backColor = randomRGB()
         
-                    data[element[i]['year'] - 1] = element[i]['grade']
+                    data[element[i]['transaction']['year'] - 1] = element[i]['transaction']['result']
                     sub = {
-                        label: element[i]['courseName'],
+                        label: element[i]['transaction']['courseName'],
                         borderColor: 'rgb(255, 255, 255)',
                         backgroundColor: backColor,
                         data: data
                     }
-                    sum += element[i]['grade']
+                    sum += element[i]['transaction']['result']
                     dataset.push(sub)
                 }
         
@@ -63,7 +75,7 @@ function Dashboard() {
 
             let average = Number(total / count).toFixed(2)
 
-            setStudentGrades((prevState) => ({
+            setGradesChartData((prevState) => ({
                 ...prevState,
                 dataset,
                 average
@@ -239,12 +251,12 @@ function Dashboard() {
                         Welcome back, <Flex fontWeight={"bold"} display="inline-flex">{auth.name}</Flex>
                     </Heading>
                     <Text fontSize={"md"}> Arithmetic Mean : </Text>
-                    <Text fontWeight={"bold"} fontSize="2xl"> {studentGrades.average} </Text>
+                    <Text fontWeight={"bold"} fontSize="2xl"> {gradesChartData.average} </Text>
                     <Grid 
                         gap={"20px"} 
                         alignItems={"center"}
                         gridTemplateColumns="repeat(2, 1fr)">
-                        <MyChart chartData={studentGrades}/>
+                        <MyChart chartData={gradesChartData}/>
                     </Grid>
                     <Flex justifyContent="space-between" mt={8}>
                         <Flex align="flex-end">
@@ -262,23 +274,23 @@ function Dashboard() {
                                 <Thead>
                                     <Tr>
                                         <Th>Subject</Th>
+                                        <Th>Teacher</Th>
                                         <Th isNumeric>Year</Th>
                                         <Th isNumeric>Result</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {MockGradeData.slice(0,3).map((item, i) => {
-                                        return [
-                                            <Tr key={i} borderBottom={"1px"}>
-                                                <Td>
-                                                    <Text fontWeight={"bold"}>{item.courseName}</Text>
-                                                    <Text fontWeight={"thin"}>{item.exameDay}</Text>
-                                                </Td>
-                                                <Td>{item.year}</Td>
-                                                <Td>{item.grade}</Td>
-                                            </Tr>
-                                        ]
-                                    })}
+                                    {grades && (Object.entries(grades).map(([key, val]) => (
+                                        <Tr key={key} borderBottom={"1px"}>
+                                            <Td>
+                                                <Text fontWeight={"bold"}>{val.transaction.courseName}</Text>
+                                                <Text fontWeight={"thin"}>{val.transaction.date}</Text>
+                                            </Td>
+                                            <Td>{val.transaction.teacher}</Td>
+                                            <Td>{val.transaction.year}</Td>
+                                            <Td>{val.transaction.result}</Td>
+                                        </Tr>
+                                    )))}
                                 </Tbody>
                             </Table>
                         </Flex>

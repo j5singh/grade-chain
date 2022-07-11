@@ -23,7 +23,6 @@ const options = {
 };
 
 function BarChart({chartData} : {chartData:any}) {
-  console.log(chartData)
   const data = {
     labels: chartData.labels,
     datasets: chartData.dataset

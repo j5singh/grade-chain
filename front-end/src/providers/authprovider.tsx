@@ -28,6 +28,7 @@ const DefaultResponse: IResponse = {
 }
 
 const DefaultAuth: User = {
+    serialNumber: "",
     name: "",
     surname: "",
     email: "",
@@ -65,6 +66,7 @@ export const AuthProvider = ({ children }: ChildProps) => {
         if(data.status !== "ERROR") {
             let parseObj: User = data.result_data
             setAuth({
+                serialNumber: parseObj.serialNumber,
                 name: parseObj.name,
                 surname: parseObj.surname,
                 email: parseObj.email,
@@ -100,6 +102,7 @@ export const AuthProvider = ({ children }: ChildProps) => {
         if (data.status !== "ERROR") {
             let parseObj: User = data.result_data
             setAuth({
+                serialNumber: parseObj.serialNumber,
                 name: parseObj.name,
                 surname: parseObj.surname,
                 email: parseObj.email,
