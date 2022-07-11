@@ -6,13 +6,6 @@ var validateHash = function(digest) {
     return re.test(digest)
 };
 
-var validateUnixTimeStamp = function(unixDate) {
-    // convert to UTC + 1 ( - 7200 * 1e3 )
-    var date = new Date((unixDate * 1e3) + 7200*1e3).toISOString().slice(-13, -5)
-    var re = /(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)/;
-    return re.test(date)
-};
-
 const GradeSchema = new Schema({
     hash: {
         type: String,
@@ -28,7 +21,6 @@ const GradeSchema = new Schema({
     timestamp: {
         type: Number,
         required: true,
-        validate: [validateUnixTimeStamp, 'Please fill a Unix TimeStamp']
     },
     nonce: {
         type: Number,

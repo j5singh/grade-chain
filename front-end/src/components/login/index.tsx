@@ -12,7 +12,7 @@ interface Error {
 
 function Login() {
     const [theme, toggleTheme] = React.useState(false);
-    const [email, setEmail] = React.useState("lorenzio.cipelli@studenti.unipr.it");
+    const [email, setEmail] = React.useState("lorenzo.cipelli@studenti.unipr.it");
     const [password, setPassword] = React.useState("san benedetto");
     const [errors, setError] = React.useState<Error>();
     const [isLoading, setIsLoading] = React.useState(false);

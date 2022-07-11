@@ -103,7 +103,7 @@ router.post('/courses', async (req, res) => {
 router.post('/studentgrades', async (req, res) => {
     const serialNumber = req.body.serialNumber
 
-    const response = await Grade.find({ "transaction.student" : serialNumber}) 
+    const response = await Grade.find({ "transaction.student" : serialNumber}).sort({ "transaction.date" : -1})
 
     if (!response) {
         return res.send({ result_msg: "There was an error getting the grades!", status: "ERROR", result_data: {} })
@@ -117,6 +117,9 @@ router.post('/studentgrades', async (req, res) => {
             return res.send({ result_msg: "There was an error getting the course info for ".concat(grade.courseCode).concat("!"), status: "ERROR", result_data: {} })
         }
 
+        var date = new Date((grade.transaction.date * 1e3) + 7200*1e3).toISOString().slice(0, 10)
+
+        grade.transaction.date = date
         grade.transaction.year = responseGrade.year
         grade.transaction.courseName = responseGrade.courseName
         grade.transaction.cfu = responseGrade.CFU
