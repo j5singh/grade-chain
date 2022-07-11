@@ -268,33 +268,41 @@ function Dashboard() {
                             </Button>
                         </Flex>
                     </Flex>
-                    <Flex flexDir={"column"}>
-                        <Flex overflow={"auto"}>
-                            <Table variant="unstyled" mt={4} >
-                                <Thead>
-                                    <Tr>
-                                        <Th>Subject</Th>
-                                        <Th>Teacher</Th>
-                                        <Th isNumeric>Year</Th>
-                                        <Th isNumeric>Result</Th>
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    {grades && (Object.entries(grades).map(([key, val]) => (
-                                        <Tr key={key} borderBottom={"1px"}>
-                                            <Td>
-                                                <Text fontWeight={"bold"}>{val.transaction.courseName}</Text>
-                                                <Text fontWeight={"thin"}>{val.transaction.date}</Text>
-                                            </Td>
-                                            <Td>{val.transaction.teacher}</Td>
-                                            <Td>{val.transaction.year}</Td>
-                                            <Td>{val.transaction.result}</Td>
-                                        </Tr>
-                                    )))}
-                                </Tbody>
-                            </Table>
-                        </Flex>
-                    </Flex>  
+                    {
+                        grades && Object.keys(grades).length !== 0
+                        ?
+                            <Flex flexDir={"column"}>
+                                <Flex overflow={"auto"}>
+                                    <Table variant="striped" mt={4} >
+                                            <Thead>
+                                                <Tr>
+                                                    <Th>Subject</Th>
+                                                    <Th>Teacher</Th>
+                                                    <Th isNumeric>Year</Th>
+                                                    <Th isNumeric>Result</Th>
+                                                </Tr>
+                                            </Thead>
+                                            <Tbody>
+                                                {grades && (Object.entries(grades).slice(0, 3).map(([key, val]) => (
+                                                    <Tr key={key} borderBottom={"1px"}>
+                                                        <Td>
+                                                            <Text fontWeight={"bold"}>{val.transaction.courseName}</Text>
+                                                            <Text fontWeight={"thin"}>{val.transaction.date}</Text>
+                                                        </Td>
+                                                        <Td>{val.transaction.teacher}</Td>
+                                                        <Td>{val.transaction.year}</Td>
+                                                        <Td>{val.transaction.result}</Td>
+                                                    </Tr>
+                                                )))}
+                                            </Tbody>
+                                        </Table>
+                                </Flex>
+                            </Flex>
+                        :
+                            <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
+                                <Text textAlign="center">No Latest Grades</Text>
+                            </Flex>
+                    }
                 </Flex>
             </Flex>
         </>
