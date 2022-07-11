@@ -7,6 +7,7 @@ require('dotenv').config();
 // IMPORT MODELS
 const User = require('../models/user')
 const Course = require('../models/course')
+const Grade = require('../models/grade')
 
 // We are inside /api
 router.post('/', async (req, res) => {
@@ -89,8 +90,6 @@ router.post('/verifytoken', async (req, res) => {
 
 // Take all courses
 router.post('/courses', async (req, res) => {
-    const userMail = req.body.mail
-
     const response = await Course.find({}) 
 
     if (!response) {
@@ -100,5 +99,31 @@ router.post('/courses', async (req, res) => {
     return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
 })
 
+// Take grades of a student by his serial number
+router.post('/studentGrades', async (req, res) => {
+    const serialNumber = req.body.serialNumber
+
+    const response = await Grade.find({ "transaction.student" : serialNumber}) 
+
+    if (!response) {
+        return res.send({ result_msg: "There was an error getting the grades!", status: "ERROR", result_data: {} })
+    }
+
+    // if the response was good we'll add all the information needed to the exams
+    for (var grade of response) {
+        var responseGrade = await Course.findOne({ "courseCode" : grade.transaction.courseCode })
+
+        if (!responseGrade) {
+            return res.send({ result_msg: "There was an error getting the course info for ".concat(grade.courseCode).concat("!"), status: "ERROR", result_data: {} })
+        }
+
+        grade.transaction.year = responseGrade.year
+        grade.transaction.courseName = responseGrade.courseName
+        grade.transaction.cfu = responseGrade.CFU
+
+    }
+
+    return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
+})
 
 module.exports = router
