@@ -35,7 +35,7 @@ const GradeSchema = new Schema({
         type: Object,
         required: true
     }
-}, {collection: 'grades'});
+}, {collection: 'grades'}, {versionKey: false});
 
 const model = mongoose.model('GradeSchema', GradeSchema)
 

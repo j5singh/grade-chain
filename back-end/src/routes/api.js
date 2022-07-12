@@ -8,6 +8,7 @@ require('dotenv').config();
 const User = require('../models/user')
 const Course = require('../models/course')
 const Grade = require('../models/grade')
+const PendingGradeSchema = require('../models/pending_grade')
 
 // We are inside /api
 router.post('/', async (req, res) => {
@@ -128,5 +129,48 @@ router.post('/studentgrades', async (req, res) => {
 
     return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
 })
+
+// Take pending grades of a student by his serial number
+router.post('/gradespending', async (req, res) => {
+    const serialNumber = req.body.serialNumber
+
+    const response = await PendingGradeSchema.find({ "transaction.student" : serialNumber}).sort({ "transaction.date" : -1})
+
+    if (!response) {
+        return res.send({ result_msg: "There was an error getting the pending grades!", status: "ERROR", result_data: {} })
+    }
+
+    return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
+})
+
+// Register a new grade
+router.post('/registergrade', async (req, res) => {
+    const digest = req.body.digest
+    const previousHash = req.body.previousHash
+    const timestamp = req.body.timestamp
+    const pendingGrade = req.body.pendingGrade
+
+    const response = await Grade.findOne({"transaction.student": pendingGrade.student, "transaction.courseCode": pendingGrade.courseCode})
+
+    if (response) {
+        return res.send({ result_msg: "Student already passed this exam!", status: "ERROR", result_data: {} })
+    }
+
+    try {
+        creation = await Grade.create({
+            hash: digest, 
+            previousHash: previousHash,
+            timestamp: timestamp,
+            nonce: pendingGrade.nonce,
+            merkleRoot: pendingGrade.merkleRoot,
+            transaction: pendingGrade.transaction
+        })
+    } catch (error) {
+        return res.send({ result_msg: error.message, status: "CREATION_ERROR", result_data: {} })
+    }
+
+    // If you reach till here, it means that the email is found in the records but the password is incorrect
+    return res.send({ result_msg: "Successfully created!", status: "SUCCESS", result_data: {} })
+});
 
 module.exports = router
