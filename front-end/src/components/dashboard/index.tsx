@@ -1,13 +1,14 @@
-import { Text, Flex, Heading, Link, Thead, Table, Th, Tbody, Tr, Td, Grid, Button } from "@chakra-ui/react";
+import { Text, Flex, Heading, Thead, Table, Th, Tbody, Tr, Td, Grid, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
 import "./style.css"
 import MyChart from "../chart/chart";
-import { Link as ReactLink } from "react-router-dom"
 import IGrades from "../../models/grades";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
+    const navigate = useNavigate()
     const { auth } = useAuth()
     const [gradesChartData, setGradesChartData] = React.useState({labels: [['1° Year'],['2° Year'],['3° Year']], dataset: [[]], average: "0"})
     const [grades, setGrades] = React.useState<IGrades>()
@@ -113,8 +114,8 @@ function Dashboard() {
                         <Heading as="h2" size="lg" letterSpacing="tight">Latest Grades</Heading>
                     </Flex>
                     <Flex align="flex-end">
-                        <Button rightIcon={<FaAngleDoubleRight />} colorScheme='pink' variant='solid'>
-                            <Link as={ReactLink} to="/grades">See All</Link>
+                        <Button rightIcon={<FaAngleDoubleRight />} colorScheme='pink' variant='solid' onClick={() => {navigate("/grades")}}>
+                            See All
                         </Button>
                     </Flex>
                 </Flex>

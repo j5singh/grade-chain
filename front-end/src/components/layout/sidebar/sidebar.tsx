@@ -1,13 +1,14 @@
 import { Flex, Heading, Icon, Link, useColorModeValue, Text } from "@chakra-ui/react"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiAlertTriangle, FiBookOpen, FiHome } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 
 function Sidebar() {
-    const [isActive, setIsActive] = useState("Home");
+    const [isActive, setIsActive] = useState("/dashboard");
 
     const navigate = useNavigate();
+    const location = useLocation();
     const { isAuthenticated } = useAuth();
     const navBarColor = useColorModeValue("#020202", "gray.700");
 
@@ -29,9 +30,17 @@ function Sidebar() {
         }
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        // This is used so that the isActive class matches with the current route (the highlight on the correct sidebar item)
+        if(isActive !== location.pathname) {
+            setIsActive(location.pathname)
+        }
+    })
+
     function changeRoute(props: any) {
         if (isActive === props.name) return;
-        setIsActive(props.name)
+        setIsActive(props.route)
         navigate(props.route)
     }
     
@@ -73,12 +82,12 @@ function Sidebar() {
                             {
                                 sidebarItems.map((item, i) => {
                                     return [
-                                        <Flex className="sidebar-items" mr={[2, 6, 0, 0, 0]} onClick={() => changeRoute(item)}>
+                                        <Flex key={i} className="sidebar-items" mr={[2, 6, 0, 0, 0]} onClick={() => changeRoute(item)}>
                                             <Link display={["none", "none", "flex", "flex", "flex"]}>
-                                                <Icon as={item.icon} fontSize="2xl" className={isActive === item.name ? "active-icon" : ""} />
+                                                <Icon as={item.icon} fontSize="2xl" className={isActive === item.route ? "active-icon" : ""} />
                                             </Link>
                                             <Link _hover={{ textDecor: 'none' }} display={["flex", "flex", "none", "flex", "flex"]}>
-                                                <Text className={isActive === item.name ? "active" : ""}>{item.name}</Text>
+                                                <Text className={isActive === item.route ? "active" : ""}>{item.name}</Text>
                                             </Link>
                                         </Flex>
                                     ]
