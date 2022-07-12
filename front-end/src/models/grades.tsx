@@ -17,4 +17,10 @@ interface IGrades {
     transaction: ITransactionGrades
 }
 
+export interface IPendingGrades {
+    nonce: number,
+    merkleRoot: string,
+    transaction: ITransactionGrades
+}
+
 export default IGrades

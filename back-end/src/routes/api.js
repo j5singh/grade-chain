@@ -140,6 +140,20 @@ router.post('/gradespending', async (req, res) => {
         return res.send({ result_msg: "There was an error getting the pending grades!", status: "ERROR", result_data: {} })
     }
 
+    // if the response was good we'll add all the information needed to the exams
+    for (var pendingGrade of response) {
+        var responsePendingGrade = await Course.findOne({ "courseCode" : pendingGrade.transaction.courseCode })
+
+        if (!responsePendingGrade) {
+            return res.send({ result_msg: "There was an error getting the course info for ".concat(responsePendingGrade.courseCode).concat("!"), status: "ERROR", result_data: {} })
+        }
+
+        pendingGrade.transaction.year = responsePendingGrade.year
+        pendingGrade.transaction.courseName = responsePendingGrade.courseName
+        pendingGrade.transaction.cfu = responsePendingGrade.CFU
+
+    }
+
     return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
 })
 
@@ -163,14 +177,31 @@ router.post('/registergrade', async (req, res) => {
             timestamp: timestamp,
             nonce: pendingGrade.nonce,
             merkleRoot: pendingGrade.merkleRoot,
-            transaction: pendingGrade.transaction
+            transaction: {
+                courseCode: pendingGrade.transaction.courseCode,
+                teacher: pendingGrade.transaction.teacher,
+                student: pendingGrade.transaction.student,
+                result: pendingGrade.transaction.result,
+                date: pendingGrade.transaction.date
+            }
         })
     } catch (error) {
-        return res.send({ result_msg: error.message, status: "CREATION_ERROR", result_data: {} })
+        return res.send({ result_msg: error.message, status: "ERROR", result_data: {} })
     }
 
-    // If you reach till here, it means that the email is found in the records but the password is incorrect
     return res.send({ result_msg: "Successfully created!", status: "SUCCESS", result_data: {} })
+});
+
+// get the hash of the last block of the chain
+router.post('/lasthash', async (req, res) => {
+
+    const response = await Grade.findOne({},{"_id":0, "hash": 1}).sort({"timestamp": -1}).limit(1)
+
+    if (!response) {
+        return res.send({ result_msg: "No last block found!", status: "ERROR", result_data: {} })
+    }
+
+    return res.send({ result_msg: "Found last block!", status: "SUCCESS", result_data: response })
 });
 
 module.exports = router
