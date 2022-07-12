@@ -1,8 +1,8 @@
 import { Flex } from "@chakra-ui/react"
 import { ReactElement } from "react"
 import useAuth from "../../hooks/useAuth";
-import Navbar from "./navbar/navbar"
-import Sidebar from "./sidebar/sidebar"
+import NavbarNew from "./navbar/navbar_new";
+import SidebarNew from "./sidebar/sidebar_new";
 
 function Layout({children} : {children: ReactElement}) {
     const { isAuthenticated } = useAuth();
@@ -12,18 +12,15 @@ function Layout({children} : {children: ReactElement}) {
             {
                 isAuthenticated ? (
                     <>
-                        {/* Navbar (top) */}
-                        <Navbar />
-                        <Flex
-                            h={[null, null, "100vh"]}
-                            maxW="2000px"
-                            flexDir={["column", "column", "row"]}
-                            overflow="hidden"
-                        >
+                        <Flex>
                             {/* SideBar */}
-                            <Sidebar />
-                            {/* Main Center Page */}
-                            {children}
+                            <SidebarNew />
+                            <div style={{flex: 6}}>
+                                {/* Navbar (top) */}
+                                <NavbarNew />
+                                {/* Main Center Page */}
+                                {children}
+                            </div>
                         </Flex>
                     </>
                 ) : children
