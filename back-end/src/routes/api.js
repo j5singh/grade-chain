@@ -8,7 +8,7 @@ require('dotenv').config();
 const User = require('../models/user')
 const Course = require('../models/course')
 const Grade = require('../models/grade')
-const PendingGradeSchema = require('../models/pending_grade')
+const PendingGrade = require('../models/pending_grade')
 
 // We are inside /api
 router.post('/', async (req, res) => {
@@ -134,7 +134,7 @@ router.post('/studentgrades', async (req, res) => {
 router.post('/gradespending', async (req, res) => {
     const serialNumber = req.body.serialNumber
 
-    const response = await PendingGradeSchema.find({ "transaction.student" : serialNumber}).sort({ "transaction.date" : -1})
+    const response = await PendingGrade.find({ "transaction.student" : serialNumber}).sort({ "transaction.date" : -1})
 
     if (!response) {
         return res.send({ result_msg: "There was an error getting the pending grades!", status: "ERROR", result_data: {} })
@@ -151,7 +151,6 @@ router.post('/gradespending', async (req, res) => {
         pendingGrade.transaction.year = responsePendingGrade.year
         pendingGrade.transaction.courseName = responsePendingGrade.courseName
         pendingGrade.transaction.cfu = responsePendingGrade.CFU
-
     }
 
     return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
@@ -171,25 +170,43 @@ router.post('/registergrade', async (req, res) => {
     }
 
     try {
-        creation = await Grade.create({
-            hash: digest, 
-            previousHash: previousHash,
-            timestamp: timestamp,
-            nonce: pendingGrade.nonce,
-            merkleRoot: pendingGrade.merkleRoot,
-            transaction: {
-                courseCode: pendingGrade.transaction.courseCode,
-                teacher: pendingGrade.transaction.teacher,
-                student: pendingGrade.transaction.student,
-                result: pendingGrade.transaction.result,
-                date: pendingGrade.transaction.date
+        const responseCheck = await Grade.findOne({},{"_id":0, "hash": 1}).sort({"timestamp": -1}).limit(1)
+
+        if (!responseCheck) {
+            return res.send({ result_msg: "No last block found!", status: "ERROR", result_data: {} })
+        }
+    
+        if (responseCheck.hash == previousHash) {
+            creation = await Grade.create({
+                hash: digest, 
+                previousHash: previousHash,
+                timestamp: timestamp,
+                nonce: pendingGrade.nonce,
+                merkleRoot: pendingGrade.merkleRoot,
+                transaction: {
+                    courseCode: pendingGrade.transaction.courseCode,
+                    teacher: pendingGrade.transaction.teacher,
+                    student: pendingGrade.transaction.student,
+                    result: pendingGrade.transaction.result,
+                    date: pendingGrade.transaction.date
+                }
+            })
+
+            if(creation) {
+                const del = await PendingGrade.deleteOne({ _id: pendingGrade._id })
+                console.log(del);
+                if (del.acknowledged) {
+                    return res.send({ result_msg: "Successfully created!", status: "SUCCESS", result_data: {} })
+                }
+            } else {
+                return res.send({ result_msg: "Block wasn't created!", status: "ERROR", result_data: {} })
             }
-        })
+        } else {
+            return res.send({ result_msg: "Previous Hash mismatch!", status: "ERROR", result_data: {} })
+        }
     } catch (error) {
         return res.send({ result_msg: error.message, status: "ERROR", result_data: {} })
     }
-
-    return res.send({ result_msg: "Successfully created!", status: "SUCCESS", result_data: {} })
 });
 
 // get the hash of the last block of the chain
