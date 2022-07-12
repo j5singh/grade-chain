@@ -150,7 +150,7 @@ router.post('/registergrade', async (req, res) => {
     const timestamp = req.body.timestamp
     const pendingGrade = req.body.pendingGrade
 
-    const response = await Grade.findOne({"transaction.student": pendingGrade.student, "transaction.courseCode": pendingGrade.courseCode})
+    const response = await Grade.findOne({"transaction.student": pendingGrade.transaction.student, "transaction.courseCode": pendingGrade.transaction.courseCode})
 
     if (response) {
         return res.send({ result_msg: "Student already passed this exam!", status: "ERROR", result_data: {} })
