@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react"
+import { Box, Flex } from "@chakra-ui/react"
 import { ReactElement } from "react"
 import useAuth from "../../hooks/useAuth";
 import NavbarNew from "./navbar/navbar_new";
@@ -15,12 +15,12 @@ function Layout({children} : {children: ReactElement}) {
                         <Flex>
                             {/* SideBar */}
                             <SidebarNew />
-                            <div style={{flex: 6}}>
+                            <Box flex={6}>
                                 {/* Navbar (top) */}
                                 <NavbarNew />
                                 {/* Main Center Page */}
                                 {children}
-                            </div>
+                            </Box>
                         </Flex>
                     </>
                 ) : children

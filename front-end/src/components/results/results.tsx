@@ -1,14 +1,28 @@
-import { Box, Flex, VStack, Heading, HStack, Tag, Button, Container } from "@chakra-ui/react"
-import React from "react"
+import { Box, Flex, VStack, Heading, HStack, Tag, Button, Container, useDisclosure, useToast, SimpleGrid } from "@chakra-ui/react"
+import { useRef } from "react"
 import { useEffect, useState } from "react"
 import SkeletonCustom from "../../helpers/skeletoncustom"
 import useAuth from "../../hooks/useAuth"
 import { IPendingGrades } from "../../models/grades"
+import ResultModal from "./modal/resultmodal"
+
+interface IResponse {
+    status: string,
+    result_msg: string,
+    result_data: {}
+}
 
 export const Results = () => {
     const { auth } = useAuth()
-    const [prendingGrades, setPendingGrades] = useState<IPendingGrades>()
-    const [isLoading, setIsLoading] = React.useState(false);
+    const toast = useToast()
+    
+    const [pendingGrades, setPendingGrades] = useState<IPendingGrades>()
+    const [isLoading, setIsLoading] = useState(false);
+    const [dataForModal, setDataForModal] = useState<IPendingGrades | null>(null)
+    const [modalType, setModalType] = useState("accept")
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const cancelRef = useRef()
 
     async function hash(pHash: string, pendGrade: IPendingGrades) {
         const timestamp = Date.now() + 7200*1e3 // Center Europe time zone
@@ -25,7 +39,8 @@ export const Results = () => {
 
         return {
             hashHex: hashHex,
-            timestamp: timestamp }
+            timestamp: timestamp 
+        }
     }
 
     useEffect(() => {
@@ -45,8 +60,8 @@ export const Results = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    async function acceptGrade(e:any) {  
-        const pendGrade = e   
+    async function acceptGrade(data: IPendingGrades) {
+        const pendGrade = data
         setIsLoading(true)
 
         async function getPreviousHash() {
@@ -61,12 +76,9 @@ export const Results = () => {
         }
 
         const prevHash = await getPreviousHash()        
-                
-        if (prevHash.length == 64) {
-            const { hashHex, timestamp } = await hash(prevHash, pendGrade)
 
-            console.log(pendGrade);
-            
+        if (prevHash.length === 64) {
+            const { hashHex, timestamp } = await hash(prevHash, pendGrade)
             // block creation
             const response = await fetch('/api/registergrade', {
                 method: 'POST',
@@ -78,24 +90,58 @@ export const Results = () => {
                     pendingGrade: pendGrade
                 }),
             })
+            const data = await response.json() as IResponse
+            if(data.status === "ERROR") {
+                toast({
+                    position: 'bottom-right',
+                    title: 'An error occured!',
+                    description: data.result_msg,
+                    status: 'error',
+                    duration: 4000,
+                    isClosable: true,
+                })
+            } else {
+                toast({
+                    position: 'bottom-right',
+                    title: 'Result accepted!',
+                    description: data.result_msg,
+                    status: 'success',
+                    duration: 4000,
+                    isClosable: true,
+                })
+            }
         }
 
         setIsLoading(false)
     }
 
-    async function declineGrade(e:any) {
-        e.preventDefault();
+    async function declineGrade(data: IPendingGrades) {
+        console.log("onDelete", data)
+        // Fai la query per fare delete qua :) chip
 
-        setIsLoading(true)
-        // do something in here
-        // const response = await doLogin(email, password);
-        // setError(response)
-        console.log("declining");
-        setIsLoading(false)
-        
-        // if (response.status === "SUCCESS") {
-        //     navigate("/dashboard", { replace: true })
-        // }
+        // const response = await fetch('/api/deletegrade', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({
+
+        //     }),
+        // })
+        // console.log("response:", response)
+    }
+
+    function openResultModal(data: IPendingGrades, type: string) {
+        setModalType(type)
+        setDataForModal(data)
+        onOpen()
+    }
+
+    async function onAction(dataToProcess: IPendingGrades, modalType: string) {
+        onClose()
+        if (modalType === "accept") {
+            acceptGrade(dataToProcess)
+        } else if (modalType === "decline") {
+            declineGrade(dataToProcess)
+        }
     }
 
     return (
@@ -103,77 +149,84 @@ export const Results = () => {
             <Container
                 py={8}
                 px={0}
-                maxW='sm'
+                maxW='5xl'
             >
-                {
-                    prendingGrades ?
-                        (Object.entries(prendingGrades).map(([key, val]) => (
-                            <Flex
-                                key={key}
-                                boxShadow="rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px"
-                                justifyContent="space-between"
-                                flexDirection="column"
-                                overflow="hidden"
-                                bg="base.d100"
-                                rounded={5}
-                                flex={1}
-                                p={5}
-                            >
-                                <VStack mb={6}>
-                                    <Heading
-                                        fontSize={{ base: "xl", md: "2xl" }}
-                                        textAlign="left"
-                                        w="full"
-                                        mb={2}
-                                    >
-                                        {val.transaction.courseName}
-                                    </Heading>
-                                    <Box
-                                        color='gray.500'
-                                        fontWeight='semibold'
-                                        letterSpacing='wide'
-                                        fontSize='xs'
-                                        textTransform='uppercase'
-                                        ml='2'
-                                    > 
-                                    </Box>
-                                </VStack>
-
-                                <Flex justifyContent="space-between">
-                                    <HStack spacing={2}>
-                                        <Tag size="md" variant="outline" colorScheme="cyan">
-                                            Year {val.transaction.year}
-                                        </Tag>
-                                        <Tag size="md" variant="solid" colorScheme="green">
-                                            {val.transaction.result}/30
-                                        </Tag>
-                                    </HStack >
-                                    <HStack spacing={2}>
-                                        <Button
-                                            colorScheme="teal"
-                                            fontWeight="bold"
-                                            size="sm"
-                                            isLoading={isLoading}
-                                            onClick={() => acceptGrade(val)}
+                <SimpleGrid
+                    columns={[2, null, 3]}
+                    spacing={10}
+                >
+                    {
+                        pendingGrades ?
+                            (Object.entries(pendingGrades).map(([key, val]) => (
+                                <Flex
+                                    key={key}
+                                    boxShadow="rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px"
+                                    justifyContent="space-between"
+                                    flexDirection="column"
+                                    alignItems={"center"}
+                                    overflow="hidden"
+                                    bg="base.d100"
+                                    rounded={5}
+                                    flex={1}
+                                    p={5}
+                                >
+                                    <VStack mb={6}>
+                                        <Heading
+                                            fontSize={{ base: "xl", md: "2xl" }}
+                                            textAlign="left"
+                                            w="full"
                                         >
-                                            Accept
-                                        </Button>
-                                        <Button
-                                            colorScheme="teal"
-                                            fontWeight="bold"
-                                            size="sm"
-                                            isLoading={isLoading}
-                                            onClick={declineGrade}
-                                        >
-                                            Decline
-                                        </Button>
-                                    </HStack>
+                                            {val.transaction.courseName}
+                                        </Heading>
+                                        <Box
+                                            color='gray.500'
+                                            fontWeight='semibold'
+                                            letterSpacing='wide'
+                                            fontSize='xs'
+                                            textTransform='uppercase'
+                                            ml='2'
+                                        > 
+                                        </Box>
+                                    </VStack>
+                                    <Flex justifyContent="space-between">
+                                        <HStack spacing={2}>
+                                            <Tag size="md" variant="outline" colorScheme="cyan">
+                                                Year {val.transaction.year}
+                                            </Tag>
+                                            <Tag size="md" variant="solid" colorScheme="green">
+                                                {val.transaction.result}/30
+                                            </Tag>
+                                        </HStack >
+                                    </Flex>
+                                    <Flex mt={3} alignItems={"center"} justifyContent="space-between">
+                                        <HStack spacing={2}>
+                                            <Button
+                                                colorScheme="whatsapp"
+                                                fontWeight="bold"
+                                                size="sm"
+                                                isLoading={isLoading}
+                                                onClick={() => openResultModal(val, "accept")}
+                                            >
+                                                Accept
+                                            </Button>
+                                            <Button
+                                                colorScheme="red"
+                                                fontWeight="bold"
+                                                size="sm"
+                                                isLoading={isLoading}
+                                                onClick={() => openResultModal(val, "decline")}
+                                            >
+                                                Decline
+                                            </Button>
+                                        </HStack>
+                                    </Flex>
                                 </Flex>
-                            </Flex>
-                        )))
-                        : <SkeletonCustom />
-                }
+                            )))
+                            : <SkeletonCustom />
+                    }
+                </SimpleGrid>
             </Container>
+            <ResultModal isOpen={isOpen} onClose={onClose} onAction={onAction} cancelRef={cancelRef} data={dataForModal} modalType={modalType} />
         </>
     )
 }

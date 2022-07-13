@@ -67,11 +67,12 @@ function SidebarNew() {
                     height={"50px"}
                     alignItems="center"
                     justifyContent={"center"}
+                    flexDir={"column"}
                     borderBottom={"2px solid rgb(230, 227, 227)"}
                 >
                     <Link style={{ textDecoration: "none" }}>
                         <Box as="span"
-                            fontSize={"20px"}
+                            fontSize={["sm", "md", "md", "md", "20px"]}
                             fontWeight="bold"
                             color={iconColors}
                         >
@@ -113,6 +114,7 @@ function SidebarNew() {
                                                     >
                                                         <Icon as={item.icon} fontSize={"2xl"} color={iconColors} />
                                                         <Box
+                                                            display={["none", "none", "flex", "flex", "flex"]}
                                                             as="span"
                                                             fontSize={"1xl"}
                                                             fontWeight="600"
