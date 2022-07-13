@@ -1,4 +1,4 @@
-interface ITransactionGrades {
+export interface ITransactionGrades {
     courseCode: string,
     teacher: string,
     student: string,
@@ -8,7 +8,7 @@ interface ITransactionGrades {
     courseName: string
 }
 
-interface IGrades {
+export interface IGrades {
     hash: string,
     previousHash: string,
     timestamp: number,
@@ -22,5 +22,3 @@ export interface IPendingGrades {
     merkleRoot: string,
     transaction: ITransactionGrades
 }
-
-export default IGrades

@@ -3,8 +3,7 @@ import React from "react"
 import { useEffect, useState } from "react"
 import SkeletonCustom from "../../helpers/skeletoncustom"
 import useAuth from "../../hooks/useAuth"
-import IGrades from "../../models/grades"
-import IPendingGrades from "../../models/grades"
+import { IPendingGrades } from "../../models/grades"
 
 export const Results = () => {
     const { auth } = useAuth()

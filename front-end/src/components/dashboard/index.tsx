@@ -4,7 +4,7 @@ import { FaAngleDoubleRight } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
 import "./style.css"
 import MyChart from "../chart/chart";
-import IGrades from "../../models/grades";
+import { IGrades } from "../../models/grades";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
