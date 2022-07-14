@@ -10,6 +10,8 @@ const Course = require('../models/course')
 const Grade = require('../models/grade')
 const PendingGrade = require('../models/pending_grade')
 
+const { subtle } = require('node:crypto').webcrypto;
+
 // We are inside /api
 router.post('/', async (req, res) => {
     res.send({msg: 'Hello from API! You are ' + (req.body.name || 'pippo') + ' ' + (req.body.surname || 'pluto')})
@@ -166,6 +168,8 @@ router.post('/registergrade', async (req, res) => {
     const response = await Grade.findOne({"transaction.student": pendingGrade.transaction.student, "transaction.courseCode": pendingGrade.transaction.courseCode})
 
     if (response) {
+        await PendingGrade.deleteOne({ _id: pendingGrade._id })
+
         return res.send({ result_msg: "Student already passed this exam!", status: "ERROR", result_data: {} })
     }
 
@@ -186,6 +190,7 @@ router.post('/registergrade', async (req, res) => {
                 transaction: {
                     courseCode: pendingGrade.transaction.courseCode,
                     teacher: pendingGrade.transaction.teacher,
+                    teacherCode: pendingGrade.transaction.teacherCode,
                     student: pendingGrade.transaction.student,
                     result: pendingGrade.transaction.result,
                     date: pendingGrade.transaction.date
@@ -218,6 +223,59 @@ router.post('/lasthash', async (req, res) => {
     }
 
     return res.send({ result_msg: "Found last block!", status: "SUCCESS", result_data: response })
+});
+
+// create pending
+router.post('/createpending', async (req, res) => {
+    const courseCode = req.body.courseCode
+    const teacher = req.body.teacher
+    const teacherCode = req.body.teacherCode
+    const studentsResults = req.body.studentResults // [{ "student": "305784", "result": 28}, { "student": "305884", "result": 29}]
+    const date = req.body.date
+    var errorList = []
+
+    const nonce = Math.floor(100000 + Math.random() * 900000)
+    const unixDate = parseInt((new Date(date).getTime() / 1000).toFixed(0)) + 7200*1e3
+
+    // for every result to be created
+    for (var studRes of studentsResults) {
+        var transactionObj = {
+            courseCode: courseCode,
+            teacher: teacher,
+            teacherCode: teacherCode,
+            student: studRes.student,
+            result: studRes.result,
+            date: unixDate
+        }
+
+        var text = '{ courseCode: ' + String(courseCode) + ', teacher: ' + String(teacher) +
+            ', teacherCode: ' + String(teacherCode) + ', student: ' + String(studRes.student) +
+            ', result: ' + String(studRes.result) + ', date: ' + String(unixDate) + ' }'
+
+        const encoder = new TextEncoder();
+        const toHash = encoder.encode(text)
+        const hash = await subtle.digest('SHA-256', toHash);
+        const hashArray = Array.from(new Uint8Array(hash));
+        const merkleRoot = hashArray
+            .map((bytes) => bytes.toString(16).padStart(2, '0'))
+            .join('');
+
+        creation = await PendingGrade.create({
+            nonce: nonce,
+            merkleRoot: merkleRoot,
+            transaction: transactionObj
+        })
+
+        if(!creation) {
+            errorList.push({courseCode: courseCode, student: studRes.student})
+        }
+    }
+
+    if(errorList.length > 0) {
+        res.send({ result_msg: "There was an error creating a block!", status: "ERROR", result_data: {errorList} })
+    }
+
+    res.send({ result_msg: "Pending blocks created!", status: "SUCCESS", result_data: {} })
 });
 
 
