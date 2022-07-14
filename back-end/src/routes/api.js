@@ -194,7 +194,6 @@ router.post('/registergrade', async (req, res) => {
 
             if(creation) {
                 const del = await PendingGrade.deleteOne({ _id: pendingGrade._id })
-                console.log(del);
                 if (del.acknowledged) {
                     return res.send({ result_msg: "Successfully created!", status: "SUCCESS", result_data: {} })
                 }
@@ -219,6 +218,20 @@ router.post('/lasthash', async (req, res) => {
     }
 
     return res.send({ result_msg: "Found last block!", status: "SUCCESS", result_data: response })
+});
+
+
+// delete pending grade
+router.post('/deletepending', async (req, res) => {
+    const pendingGrade = req.body.pendingGrade
+
+    const del = await PendingGrade.deleteOne({ _id: pendingGrade._id })
+
+    if (del.acknowledged) {
+        return res.send({ result_msg: "Successfully declined!", status: "SUCCESS", result_data: {} })
+    }
+
+    return res.send({ result_msg: "Result declination didn't succeed!", status: "SUCCESS", result_data: response })
 });
 
 module.exports = router

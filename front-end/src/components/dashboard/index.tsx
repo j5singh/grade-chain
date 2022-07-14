@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 function Dashboard() {
     const navigate = useNavigate()
     const { auth } = useAuth()
-    const [gradesChartData, setGradesChartData] = React.useState({labels: [['1° Year'],['2° Year'],['3° Year']], dataset: [[]], average: "0"})
+    const [gradesChartData, setGradesChartData] = React.useState({labels: [['1° Year'],['2° Year'],['3° Year']], dataset: [[]], average: ""})
     const [grades, setGrades] = React.useState<IGrades>()
 
     const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
@@ -72,7 +72,7 @@ function Dashboard() {
             })
 
             let average = Number(total / count).toFixed(2)
-
+            if (isNaN(Number(average))) average = '0'
             setGradesChartData((prevState) => ({
                 ...prevState,
                 dataset,

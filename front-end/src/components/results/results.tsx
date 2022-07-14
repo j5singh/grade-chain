@@ -1,4 +1,4 @@
-import { Box, Flex, VStack, Heading, HStack, Tag, Button, Container, useDisclosure, useToast, SimpleGrid } from "@chakra-ui/react"
+import { Text, Box, Flex, VStack, Heading, HStack, Tag, Button, Container, useDisclosure, useToast, SimpleGrid } from "@chakra-ui/react"
 import { useRef } from "react"
 import { useEffect, useState } from "react"
 import SkeletonCustom from "../../helpers/skeletoncustom"
@@ -44,18 +44,6 @@ export const Results = () => {
     }
 
     useEffect(() => {
-        async function getPendingGrades() {
-            const response = await fetch('/api/gradespending', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    serialNumber: auth.serialNumber
-                }),
-            })
-            const data = await response.json()
-            setPendingGrades(data.result_data as IPendingGrades)
-        }
-
         getPendingGrades()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -113,20 +101,57 @@ export const Results = () => {
         }
 
         setIsLoading(false)
+        getPendingGrades()
     }
 
-    async function declineGrade(data: IPendingGrades) {
-        console.log("onDelete", data)
-        // Fai la query per fare delete qua :) chip
+    async function declineGrade(dataToDecline: IPendingGrades) {
+        const pendGrade = dataToDecline
+        setIsLoading(true)
 
-        // const response = await fetch('/api/deletegrade', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({
+        const response = await fetch('/api/deletepending', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pendingGrade: pendGrade
+            }),
+        })
 
-        //     }),
-        // })
-        // console.log("response:", response)
+        const data = await response.json() as IResponse
+        if(data.status === "ERROR") {
+            toast({
+                position: 'bottom-right',
+                title: 'An error occured!',
+                description: data.result_msg,
+                status: 'error',
+                duration: 4000,
+                isClosable: true,
+            })
+        } else {
+            toast({
+                position: 'bottom-right',
+                title: 'Result declined!',
+                description: data.result_msg,
+                status: 'success',
+                duration: 4000,
+                isClosable: true,
+            })
+        }
+
+        setIsLoading(false)
+        getPendingGrades()
+    }
+
+    async function getPendingGrades() {
+        const response = await fetch('/api/gradespending', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                serialNumber: auth.serialNumber
+            }),
+        })
+        const data = await response.json()
+        
+        setPendingGrades(data.result_data as IPendingGrades)
     }
 
     function openResultModal(data: IPendingGrades, type: string) {
@@ -156,7 +181,7 @@ export const Results = () => {
                     spacing={10}
                 >
                     {
-                        pendingGrades ?
+                        pendingGrades && Object.keys(pendingGrades).length != 0 ?
                             (Object.entries(pendingGrades).map(([key, val]) => (
                                 <Flex
                                     key={key}
@@ -222,6 +247,11 @@ export const Results = () => {
                                     </Flex>
                                 </Flex>
                             )))
+                            : pendingGrades && Object.keys(pendingGrades).length === 0
+                            ? 
+                            <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
+                                <Text textAlign="center">No Results waiting for action</Text>
+                            </Flex>
                             : <SkeletonCustom />
                     }
                 </SimpleGrid>
