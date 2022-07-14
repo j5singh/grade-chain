@@ -6,6 +6,7 @@ import "./style.css"
 import MyChart from "../chart/chart";
 import { IGrades } from "../../models/grades";
 import { useNavigate } from "react-router-dom";
+import { Constants } from "../../config/constants";
 
 function Dashboard() {
     const navigate = useNavigate()
@@ -114,7 +115,7 @@ function Dashboard() {
                         <Heading as="h2" size="lg" letterSpacing="tight">Latest Grades</Heading>
                     </Flex>
                     <Flex align="flex-end">
-                        <Button rightIcon={<FaAngleDoubleRight />} colorScheme='pink' variant='solid' onClick={() => {navigate("/grades")}}>
+                        <Button rightIcon={<FaAngleDoubleRight />} colorScheme='pink' variant='solid' onClick={() => {navigate(Constants.STUDENT_ROUTES.grades)}}>
                             See All
                         </Button>
                     </Flex>

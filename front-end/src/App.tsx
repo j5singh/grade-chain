@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from './components/layout/layout';
+import { Constants } from './config/constants';
 import RoutesConfig from './config/routes';
 import useAuth from './hooks/useAuth';
 
@@ -12,9 +13,9 @@ function App() {
     const doVerifyToken = async () => {
       const result = await verifyToken();
       if(result.status === "ERROR") {
-        navigate("/login")
+        navigate(Constants.AUTH_ROUTES.login)
       } else {
-        navigate("/dashboard", { replace: true })
+        navigate(Constants.STUDENT_ROUTES.dashboard, { replace: true })
       }
     }
 

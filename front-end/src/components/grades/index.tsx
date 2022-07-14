@@ -46,7 +46,7 @@ export const Grades = () => {
                     spacing={10}
                 >
                     {
-                        grades && Object.keys(grades).length != 0 ?
+                        grades && Object.keys(grades).length !== 0 ?
                             (Object.entries(grades).map(([key, val]) => (
                                 <Flex
                                     key={key}
