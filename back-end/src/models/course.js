@@ -11,6 +11,21 @@ var validateCourseName = function(nameORsurname) {
     return re.test(nameORsurname)
 };
 
+const TeacherSchema = new Schema({
+    teacherCode: {
+        type: String,
+        require: true
+    },
+    name: {
+        type: String,
+        require: true
+    },
+    surname: {
+        type: String,
+        require: true
+    }
+})
+
 const CourseSchema = new Schema({
     courseName: {
         type: String,
@@ -18,9 +33,8 @@ const CourseSchema = new Schema({
         validate: [validateCourseName, 'Please fill a valid course name']
     },
     teacher: {
-        type: String,
+        type: TeacherSchema,
         required: true,
-        validate: [validateCourseName, 'Please fill a valid surname']
     },
     cfu: {
         type: Number,

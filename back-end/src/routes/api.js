@@ -289,7 +289,20 @@ router.post('/deletepending', async (req, res) => {
         return res.send({ result_msg: "Successfully declined!", status: "SUCCESS", result_data: {} })
     }
 
-    return res.send({ result_msg: "Result declination didn't succeed!", status: "SUCCESS", result_data: response })
+    return res.send({ result_msg: "Result declination didn't succeed!", status: "ERROR", result_data: response })
+});
+
+// get all courses a professor teaches
+router.post('/teachingcourses', async (req, res) => {
+    const teacherCode = req.body.teacherCode
+
+    const response = await Course.find({ "teacher.teacherCode": teacherCode })
+
+    if (!response) {
+        return res.send({ result_msg: "No course was found", status: "ERROR", result_data: {} })
+    }
+
+    return res.send({ result_msg: "Courses found!", status: "SUCCESS", result_data: response })
 });
 
 module.exports = router
