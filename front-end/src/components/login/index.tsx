@@ -3,6 +3,7 @@ import { FaMoon, FaPaperPlane, FaSun } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import { Constants } from '../../config/constants';
 
 interface Error {
     result_data: any,
@@ -32,7 +33,7 @@ function Login() {
         setIsLoading(false)
         
         if (response.status === "SUCCESS") {
-            navigate("/dashboard", { replace: true })
+            navigate(Constants.STUDENT_ROUTES.dashboard, { replace: true })
         }
     }
 

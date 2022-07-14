@@ -1,45 +1,20 @@
 import { Box, Flex, Link, UnorderedList, Text, useColorModeValue, Icon, ListItem } from "@chakra-ui/react"
 import { Fragment } from "react";
 import { useEffect, useState } from "react";
-import { MdDashboard, MdSchool, MdOutlineLaptopChromebook } from "react-icons/md"
 import { useLocation, useNavigate } from "react-router-dom"
+import { Constants } from "../../../config/constants";
+import { sidebarItems } from "../../../config/sidebaritems";
+import useAuth from "../../../hooks/useAuth";
 
 function SidebarNew() {
-    const [isActive, setIsActive] = useState("/dashboard");
+    const [isActive, setIsActive] = useState(Constants.STUDENT_ROUTES.dashboard);
+    const { auth } = useAuth();
     
     const navigate = useNavigate();
     const location = useLocation();
 
     const iconColors = useColorModeValue("pink.600", "pink.200");
     const hoverColor = useColorModeValue("pink.200", "pink.600");
-
-    const sidebarItems = [
-        {
-            paragraphName: "MAIN",
-            subItems: [
-                {
-                    icon: MdDashboard,
-                    name: "Dashboard",
-                    route: "/dashboard"
-                }
-            ]
-        },
-        {
-            paragraphName: "SERVICES",
-            subItems: [
-                {
-                    icon: MdSchool,
-                    name: "Grades",
-                    route: "/grades"
-                },
-                {
-                    icon: MdOutlineLaptopChromebook,
-                    name: "Results",
-                    route: "/results"
-                }
-            ]
-        }
-    ];
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -88,7 +63,7 @@ function SidebarNew() {
                         padding={"0"}
                     >
                         {
-                            sidebarItems.map((item, i) => {
+                            sidebarItems.map((item, _) => {
                                 return (
                                     <Fragment key={item.paragraphName}>
                                         <Text
@@ -100,8 +75,9 @@ function SidebarNew() {
                                         >
                                             {item.paragraphName}
                                         </Text>
-                                        {item.subItems.map((item, i) => {
+                                        {item.subItems.map((item, _) => {
                                             return (
+                                                auth.roles.includes(item.roles) &&
                                                 <Fragment key={item.route}>
                                                     <ListItem
                                                         backgroundColor={isActive === item.route ? hoverColor : ""}

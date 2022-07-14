@@ -181,7 +181,7 @@ export const Results = () => {
                     spacing={10}
                 >
                     {
-                        pendingGrades && Object.keys(pendingGrades).length != 0 ?
+                        pendingGrades && Object.keys(pendingGrades).length !== 0 ?
                             (Object.entries(pendingGrades).map(([key, val]) => (
                                 <Flex
                                     key={key}

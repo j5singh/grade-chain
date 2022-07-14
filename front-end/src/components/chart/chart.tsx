@@ -1,4 +1,3 @@
-import { Flex, Text } from '@chakra-ui/react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import SkeletonCustom from '../../helpers/skeletoncustom';
@@ -30,7 +29,7 @@ function BarChart({chartData} : {chartData:any}) {
   };
   
   return ( chartData.average === "" ? <SkeletonCustom /> : 
-    chartData.average != 0 ? <Bar options={options} data={data} /> 
+    chartData.average !== "0" ? <Bar options={options} data={data} /> 
     : null )
 }
 
