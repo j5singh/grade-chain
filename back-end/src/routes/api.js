@@ -9,6 +9,7 @@ const User = require('../models/user')
 const Course = require('../models/course')
 const Grade = require('../models/grade')
 const PendingGrade = require('../models/pending_grade')
+const Exam = require('../models/exam')
 
 const { subtle } = require('node:crypto').webcrypto;
 
@@ -235,7 +236,7 @@ router.post('/createpending', async (req, res) => {
     var errorList = []
 
     const nonce = Math.floor(100000 + Math.random() * 900000)
-    const unixDate = parseInt((new Date(date).getTime() / 1000).toFixed(0)) + 7200*1e3
+    const unixDate = parseInt((new Date(date).getTime() / 1000).toFixed(0))
 
     // for every result to be created
     for (var studRes of studentsResults) {
@@ -303,6 +304,60 @@ router.post('/teachingcourses', async (req, res) => {
     }
 
     return res.send({ result_msg: "Courses found!", status: "SUCCESS", result_data: response })
+});
+
+// create a new exam
+router.post('/createexam', async (req, res) => {
+    const bookOpening = req.body.bookOpening // Unix Timestamp
+    const bookClosing = req.body.bookClosing // Unix Timestamp
+    const teacherCode = req.body.teacherCode
+    const teacher = req.body.teacher
+    const courseCode = req.body.courseCode
+    const courseName = req.body.courseName
+    const examDate = req.body.examDate // Unix Timestamp
+
+    const creation = await Exam.create({
+        bookingOpening: bookOpening,
+        bookingClosing: bookClosing,
+        teacherCode: teacherCode,
+        teacher: teacher,
+        courseCode: courseCode,
+        courseName: courseName,
+        examDate: examDate
+    })
+
+    if(creation) {
+        return res.send({ result_msg: "Successfully created!", status: "SUCCESS", result_data: {} })
+    } else {
+        return res.send({ result_msg: "Block wasn't created!", status: "ERROR", result_data: {} })
+    }
+});
+
+// get exams that are open to subscription, the student can now subscribe
+router.post('/opensubscriptions', async (req, res) => {
+    const teacherCode = req.body.teacherCode
+
+    // bisogna trovare tutti gli esami che hanno iscrizioni aperte, quindi in cui
+    // la data di oggi è maggiore della data di apertura dell'esame stesso ma minore
+    // della data di iscrizione, per ogni risultato bisogna controllare se lo studente 
+    // ha già passato quell'esame oppure se c'è un risultato pending per quell'esame, 
+    // se una delle due possibilità si verifica lo studente non si può prenotare
+
+    return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
+});
+
+// get exams that can be registered, you can now assign grades to the students registered to them
+router.post('/finishedexams', async (req, res) => {
+    const teacherCode = req.body.teacherCode
+    const todayDate = parseInt((new Date().getTime() / 1000).toFixed(0))
+
+    const response = await Exam.find({ teacherCode: teacherCode, examDate: {$lt: todayDate} })
+
+    if (!response) {
+        return res.send({ result_msg: "No exam was found", status: "ERROR", result_data: {} })
+    }
+
+    return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
 });
 
 module.exports = router
