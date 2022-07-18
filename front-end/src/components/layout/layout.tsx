@@ -1,8 +1,8 @@
 import { Box, Flex } from "@chakra-ui/react"
 import { ReactElement } from "react"
 import useAuth from "../../hooks/useAuth";
-import NavbarNew from "./navbar/navbar_new";
-import SidebarNew from "./sidebar/sidebar_new";
+import Navbar from "./navbar/navbar";
+import Sidebar from "./sidebar/sidebar";
 
 function Layout({children} : {children: ReactElement}) {
     const { isAuthenticated } = useAuth();
@@ -14,10 +14,10 @@ function Layout({children} : {children: ReactElement}) {
                     <>
                         <Flex>
                             {/* SideBar */}
-                            <SidebarNew />
+                            <Sidebar />
                             <Box flex={6}>
                                 {/* Navbar (top) */}
-                                <NavbarNew />
+                                <Navbar />
                                 {/* Main Center Page */}
                                 {children}
                             </Box>

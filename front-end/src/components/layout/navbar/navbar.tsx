@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import useAuth from "../../../hooks/useAuth";
 
-function NavbarNew() {
+function Navbar() {
     const { toggleColorMode } = useColorMode();
     const [theme, toggleTheme] = useState(false);
     const { auth, doLogout } = useAuth()
@@ -105,4 +105,4 @@ function NavbarNew() {
     )
 }
 
-export default NavbarNew
+export default Navbar

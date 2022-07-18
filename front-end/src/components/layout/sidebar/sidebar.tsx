@@ -6,7 +6,7 @@ import { Constants } from "../../../config/constants";
 import { sidebarItems } from "../../../config/sidebaritems";
 import useAuth from "../../../hooks/useAuth";
 
-function SidebarNew() {
+function Sidebar() {
     const [isActive, setIsActive] = useState(Constants.STUDENT_ROUTES.dashboard);
     const { auth } = useAuth();
     
@@ -113,4 +113,4 @@ function SidebarNew() {
     )
 }
 
-export default SidebarNew
+export default Sidebar
