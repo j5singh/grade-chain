@@ -227,6 +227,159 @@ router.post('/lasthash', async (req, res) => {
     return res.send({ result_msg: "Found last block!", status: "SUCCESS", result_data: response })
 });
 
+
+// delete pending grade
+router.post('/deletepending', async (req, res) => {
+    const pendingGrade = req.body.pendingGrade
+
+    const del = await PendingGrade.deleteOne({ _id: pendingGrade._id })
+
+    if (del.acknowledged) {
+        return res.send({ result_msg: "Successfully declined!", status: "SUCCESS", result_data: {} })
+    }
+
+    return res.send({ result_msg: "Result declination didn't succeed!", status: "ERROR", result_data: response })
+});
+
+// get exams that are open to subscription, the student can now subscribe
+router.post('/opensubscriptions', async (req, res) => {
+    const serialNumber = req.body.serialNumber
+    const currentDate = parseInt((new Date().getTime() + 7200*1e3) / 1000) // seconds
+    var toShow = []
+
+    const result = await Exam.find({})
+
+    // for every exam found
+    for (var exam of result) {
+        if (currentDate >= exam.bookingOpening && currentDate <= exam.bookingClosing ) {
+            const findingGrade = await Grade.findOne({"transaction.student" : serialNumber, "transaction.courseCode" : exam.courseCode})
+            const findingGradePending = await PendingGrade.findOne({"transaction.student" : serialNumber, "transaction.courseCode" : exam.courseCode})
+            const findingExamSub = await Subscription.findOne({"serialNumber" : serialNumber, "exam.courseCode" : exam.courseCode})
+
+            if (findingGrade == null && findingGradePending == null && findingExamSub == null) {
+                toShow.push(exam)
+            }
+        }
+    }
+
+    if (toShow.length > 0) 
+        return res.send({ result_msg: "Found exams to show!", status: "SUCCESS", result_data: toShow})
+    else
+        return res.send({result_msg: "No exams found to be shown!", status: "ERROR", result_data: {}})
+});
+
+// student subscription to an exam
+router.post('/subscribe', async (req, res) => {
+    const serialNumber = req.body.serialNumber
+    const exam = req.body.exam // pass the entire exam object
+
+    const findingExamSub = await Subscription.findOne({"serialNumber" : serialNumber, "exam.courseCode" : exam.courseCode})
+
+    if (!findingExamSub) {
+        const creation = await Subscription.create({
+            serialNumber: serialNumber,
+            exam: exam
+        })
+    
+        if(creation) {
+            return res.send({ result_msg: "Successfully subscribed!", status: "SUCCESS", result_data: {} })
+        } else {
+            return res.send({ result_msg: "Couldn't subscribe!", status: "ERROR", result_data: {} })
+        }
+    } else {
+        return res.send({ result_msg: "Student already registered for this exam!", status: "ERROR", result_data: {} })
+    }
+});
+
+// student subscription to an exam
+router.post('/studentsubscription', async (req, res) => {
+    const serialNumber = req.body.serialNumber
+
+    const result = await Subscription.find({"serialNumber" : serialNumber})
+
+    if (result)
+        return res.send({ result_msg: "Subscription found!", status: "SUCCESS", result_data: result })
+    else
+        return res.send({ result_msg: "Couldn't find subscriptions!", status: "ERROR", result_data: {} })
+});
+
+// TEACHER QUERY'S
+
+// get exams that can be registered, you can now assign grades to the students registered to them
+router.post('/finishedexams', async (req, res) => {
+    const teacherCode = req.body.teacherCode
+    const todayDate = parseInt((new Date().getTime() / 1000).toFixed(0))
+
+    const response = await Exam.find({ teacherCode: teacherCode, examDate: {$lt: todayDate} })
+
+    if (!response) {
+        return res.send({ result_msg: "No exam was found", status: "ERROR", result_data: {} })
+    }
+
+    return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
+});
+
+// teacher creates a new exam upon which student can book their participation
+router.post('/createexam', async (req, res) => {
+    const bookOpening = req.body.bookOpening // Unix Timestamp
+    const bookClosing = req.body.bookClosing // Unix Timestamp
+    const teacherCode = req.body.serialNumber
+    const teacher = req.body.surname
+    const courseCode = req.body.courseCode
+    const courseName = req.body.courseName
+    const examDate = req.body.examDate // Unix Timestamp
+
+    const creation = await Exam.create({
+        bookingOpening: bookOpening,
+        bookingClosing: bookClosing,
+        teacherCode: teacherCode,
+        teacher: teacher,
+        courseCode: courseCode,
+        courseName: courseName,
+        examDate: examDate
+    })
+
+    if(creation) {
+        return res.send({ result_msg: "Exam successfully created!", status: "SUCCESS", result_data: {} })
+    } else {
+        return res.send({ result_msg: "Couldn't create the exam!", status: "ERROR", result_data: {} })
+    }
+});
+
+// get all courses a professor teaches
+router.post('/teachingcourses', async (req, res) => {
+    const teacherCode = req.body.teacherCode
+
+    const response = await Course.find({ "teacher.teacherCode": teacherCode })
+
+    if (!response) {
+        return res.send({ result_msg: "No course was found", status: "ERROR", result_data: {} })
+    }
+
+    return res.send({ result_msg: "Courses found!", status: "SUCCESS", result_data: response })
+});
+
+// show teacher exams with participation
+router.post('/scheduledexams', async (req, res) => {
+    const teacherCode = req.body.serialNumber
+
+    const response = await Exam.find({ teacherCode: teacherCode })
+
+    if (!response) {
+        
+        return res.send({ result_msg: "No exam was found", status: "ERROR", result_data: {} })
+    }
+
+    for (var exam of response) {
+        var occurrences = await Subscription.find({"exam._id" : exam._id}).count()
+
+        exam.occurrences = occurrences
+    }
+    
+    console.log(response);
+    return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
+});
+
 // create pending
 router.post('/createpending', async (req, res) => {
     const courseCode = req.body.courseCode
@@ -278,136 +431,6 @@ router.post('/createpending', async (req, res) => {
     }
 
     res.send({ result_msg: "Pending blocks created!", status: "SUCCESS", result_data: {} })
-});
-
-
-// delete pending grade
-router.post('/deletepending', async (req, res) => {
-    const pendingGrade = req.body.pendingGrade
-
-    const del = await PendingGrade.deleteOne({ _id: pendingGrade._id })
-
-    if (del.acknowledged) {
-        return res.send({ result_msg: "Successfully declined!", status: "SUCCESS", result_data: {} })
-    }
-
-    return res.send({ result_msg: "Result declination didn't succeed!", status: "ERROR", result_data: response })
-});
-
-// get all courses a professor teaches
-router.post('/teachingcourses', async (req, res) => {
-    const teacherCode = req.body.teacherCode
-
-    const response = await Course.find({ "teacher.teacherCode": teacherCode })
-
-    if (!response) {
-        return res.send({ result_msg: "No course was found", status: "ERROR", result_data: {} })
-    }
-
-    return res.send({ result_msg: "Courses found!", status: "SUCCESS", result_data: response })
-});
-
-// create a new exam
-router.post('/createexam', async (req, res) => {
-    const bookOpening = req.body.bookOpening // Unix Timestamp
-    const bookClosing = req.body.bookClosing // Unix Timestamp
-    const teacherCode = req.body.teacherCode
-    const teacher = req.body.teacher
-    const courseCode = req.body.courseCode
-    const courseName = req.body.courseName
-    const examDate = req.body.examDate // Unix Timestamp
-
-    const creation = await Exam.create({
-        bookingOpening: bookOpening,
-        bookingClosing: bookClosing,
-        teacherCode: teacherCode,
-        teacher: teacher,
-        courseCode: courseCode,
-        courseName: courseName,
-        examDate: examDate
-    })
-
-    if(creation) {
-        return res.send({ result_msg: "Successfully created!", status: "SUCCESS", result_data: {} })
-    } else {
-        return res.send({ result_msg: "Block wasn't created!", status: "ERROR", result_data: {} })
-    }
-});
-
-// get exams that can be registered, you can now assign grades to the students registered to them
-router.post('/finishedexams', async (req, res) => {
-    const teacherCode = req.body.teacherCode
-    const todayDate = parseInt((new Date().getTime() / 1000).toFixed(0))
-
-    const response = await Exam.find({ teacherCode: teacherCode, examDate: {$lt: todayDate} })
-
-    if (!response) {
-        return res.send({ result_msg: "No exam was found", status: "ERROR", result_data: {} })
-    }
-
-    return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
-});
-
-// get exams that are open to subscription, the student can now subscribe
-router.post('/opensubscriptions', async (req, res) => {
-    const serialNumber = req.body.serialNumber
-    const currentDate = parseInt((new Date().getTime() + 7200*1e3) / 1000) // seconds
-    var toShow = []
-
-    const result = await Exam.find({})
-
-    // for every exam found
-    for (var exam of result) {
-        if (currentDate >= exam.bookingOpening && currentDate <= exam.bookingClosing ) {
-            const findingGrade = await Grade.findOne({"transaction.student" : serialNumber, "transaction.courseCode" : exam.courseCode})
-            const findingGradePending = await PendingGrade.findOne({"transaction.student" : serialNumber, "transaction.courseCode" : exam.courseCode})
-            const findingExamSub = await Subscription.findOne({"studentCode" : serialNumber, "exam.courseCode" : exam.courseCode})
-
-            if (findingGrade == null && findingGradePending == null && findingExamSub == null) {
-                toShow.push(exam)
-            }
-        }
-    }
-
-    if (toShow.length > 0) 
-        return res.send({ result_msg: "Found exams to show!", status: "SUCCESS", result_data: toShow})
-    else
-        return res.send({result_msg: "No exams found to be shown!", status: "ERROR", result_data: {}})
-});
-
-// student subscription to an exam
-router.post('/subscribe', async (req, res) => {
-    const serialNumber = req.body.serialNumber
-    const exam = req.body.exam // pass the entire exam object
-
-    const findingExamSub = await Subscription.findOne({"serialNumber" : serialNumber, "exam.courseCode" : exam.courseCode})
-
-    if (!findingExamSub) {
-        const creation = await Subscription.create({
-            serialNumber: serialNumber,
-            exam: exam
-        })
-    
-        if(creation) {
-            return res.send({ result_msg: "Successfully subscribed!", status: "SUCCESS", result_data: {} })
-        } else {
-            return res.send({ result_msg: "Couldn't subscribe!", status: "ERROR", result_data: {} })
-        }
-    } else {
-        return res.send({ result_msg: "Student already registered for this exam!", status: "ERROR", result_data: {} })
-    }
-});
-
-// student subscription to an exam
-router.post('/studentsubscription', async (req, res) => {
-    const serialNumber = req.body.serialNumber
-
-    const result = await Subscription.find({"serialNumber" : serialNumber})
-
-    if (result)
-        return res.send({ result_msg: "Subscription found!", status: "SUCCESS", result_data: result })
-    else
-        return res.send({ result_msg: "Couldn't find subscriptions!", status: "ERROR", result_data: {} })
 });
 
 module.exports = router
