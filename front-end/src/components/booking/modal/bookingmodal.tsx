@@ -1,6 +1,5 @@
-import { AlertDialog, AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Avatar, Badge, Box, Button, Divider, Flex, Stat, StatHelpText, StatLabel, StatNumber, Text } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Avatar, Badge, Box, Button, Divider, Flex, Stat, StatHelpText, StatLabel, Text } from "@chakra-ui/react"
 import { IExam } from "../../../models/exam"
-import { IPendingGrades } from "../../../models/grades"
 
 function BookingModal({isOpen, onClose, cancelRef, data} : {isOpen: any, onClose: any, cancelRef: any, data: IExam | null}) {
     return (
@@ -48,7 +47,7 @@ function BookingModal({isOpen, onClose, cancelRef, data} : {isOpen: any, onClose
                 <Divider orientation='horizontal' variant={"solid"} />
                 <AlertDialogFooter>
                     <Button ref={cancelRef} onClick={onClose}>
-                        Ok
+                        OK
                     </Button>
                 </AlertDialogFooter>
                 </AlertDialogContent>

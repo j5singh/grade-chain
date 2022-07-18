@@ -1,4 +1,4 @@
-import { Text, Box, Flex, VStack, Heading, HStack, Tag, Button, Container, useDisclosure, useToast, SimpleGrid } from "@chakra-ui/react"
+import { Text, Box, Flex, VStack, Heading, HStack, Tag, Button, Container, useDisclosure, useToast, SimpleGrid, Divider } from "@chakra-ui/react"
 import { useRef } from "react"
 import { useEffect, useState } from "react"
 import SkeletonCustom from "../../helpers/skeletoncustom"
@@ -171,6 +171,16 @@ export const Results = () => {
 
     return (
         <>
+            <Flex pl="3%" pt="3%">
+                <Heading
+                    fontWeight={"normal"}
+                    mb={4}
+                    letterSpacing="tight"
+                >
+                    Results
+                </Heading>
+            </Flex>
+            <Divider orientation='horizontal' variant={"solid"} />
             <Container
                 py={8}
                 px={0}
@@ -249,8 +259,8 @@ export const Results = () => {
                             )))
                             : pendingGrades && Object.keys(pendingGrades).length === 0
                             ? 
-                            <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
-                                <Text textAlign="center">No Results waiting for action</Text>
+                            <Flex flexDir="column" alignItems="center">
+                                <Text textAlign="center">No results waiting for action</Text>
                             </Flex>
                             : <SkeletonCustom />
                     }

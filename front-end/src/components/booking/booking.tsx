@@ -1,26 +1,28 @@
 import { Container, SimpleGrid, Text, Flex, VStack, Heading, Box, HStack, Tag, Button, useDisclosure, useToast, Divider } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
 import SkeletonCustom from "../../helpers/skeletoncustom";
 import useAuth from "../../hooks/useAuth";
-import { IExam, ISubscription } from "../../models/exam";
+import { IExam } from "../../models/exam";
 import BookingModal from "./modal/bookingmodal";
 
 function Booking() {
     const { auth } = useAuth()
     const toast = useToast()
-    const [ exams, setExams ] = React.useState<IExam>()
+
+    const [ exams, setExams ] = useState<IExam>()
     const [ isLoading, setIsLoading] = useState(false);
-    const [ subscriptions, setSub ] = React.useState<IExam>()
+    const [ subscriptions, setSub ] = useState<IExam>()
     const [ dataForModal, setDataForModal ] = useState<IExam | null>(null)
-    const cancelRef = useRef()
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const cancelRef = useRef()
     
     useEffect(() => {
         getOpenSub() // open subscriptions
         getSub() // student subscriptions
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     async function getOpenSub() {
@@ -35,8 +37,7 @@ function Booking() {
         const data = await response.json()
         const examData = data.result_data
         setExams(examData)
-    
-    }        
+    }
     
     async function getSub() {
         const response = await fetch('/api/studentsubscription', {
@@ -49,10 +50,8 @@ function Booking() {
 
         const data = await response.json()
         const subData = data.result_data
-        
         setSub(subData)
-    
-    }   
+    }
 
     async function bookExam(dataExam: IExam) {
         const examData = dataExam
@@ -68,7 +67,6 @@ function Booking() {
         })
 
         const data = await response.json()
-
         if(data.status === "ERROR") {
             toast({
                 position: 'bottom-right',
@@ -81,7 +79,7 @@ function Booking() {
         } else {
             toast({
                 position: 'bottom-right',
-                title: 'Result accepted!',
+                title: 'Successfully booked the exam!',
                 description: data.result_msg,
                 status: 'success',
                 duration: 4000,
@@ -107,9 +105,10 @@ function Booking() {
                     mb={4}
                     letterSpacing="tight"
                     >
-                        Bookable exams
+                        Bookable Exams
                 </Heading>
             </Flex>
+            <Divider orientation='horizontal' variant={"solid"} />
             <Container
                 py={8}
                 px={0}
@@ -168,7 +167,7 @@ function Booking() {
                                             More
                                         </Button>
                                         <Button
-                                            colorScheme="teal"
+                                            colorScheme="whatsapp"
                                             fontWeight="bold"
                                             size="sm"
                                             isLoading={isLoading}
@@ -182,23 +181,23 @@ function Booking() {
                             : exams && Object.keys(exams).length === 0
                             ? 
                             <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
-                                <Text textAlign="center">No Exams to show</Text>
+                                <Text textAlign="center">No exams available for booking</Text>
                             </Flex>
                             : <SkeletonCustom />
                     }
                 </SimpleGrid>
                 <BookingModal isOpen={isOpen} cancelRef={cancelRef} onClose={onClose} data={dataForModal}/>
             </Container>
-            <Divider mt='3' orientation='horizontal' variant={"solid"} />
             <Flex pl="3%" pt="3%">
                 <Heading
                     fontWeight={"normal"}
                     mb={4}
                     letterSpacing="tight"
                     >
-                        Booked exams
+                        Booked Exams
                 </Heading>
             </Flex>
+            <Divider orientation='horizontal' variant={"solid"} />
             <Container
                 py={8}
                 px={0}
@@ -262,7 +261,7 @@ function Booking() {
                             : subscriptions && Object.keys(subscriptions).length === 0
                             ? 
                             <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
-                                <Text textAlign="center">No Booked Exams to show</Text>
+                                <Text textAlign="center">No booked exams to show</Text>
                             </Flex>
                             : <SkeletonCustom />
                     }

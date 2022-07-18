@@ -1,4 +1,4 @@
-import { Box, Flex, Text, VStack, Heading, HStack, Tag, Button, Container, SimpleGrid, useDisclosure } from "@chakra-ui/react"
+import { Box, Flex, Text, VStack, Heading, HStack, Tag, Button, Container, SimpleGrid, useDisclosure, Divider } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import SkeletonCustom from "../../helpers/skeletoncustom"
 import useAuth from "../../hooks/useAuth"
@@ -36,6 +36,16 @@ export const Grades = () => {
 
     return (
         <>
+            <Flex pl="3%" pt="3%">
+                <Heading
+                    fontWeight={"normal"}
+                    mb={4}
+                    letterSpacing="tight"
+                >
+                    Grades
+                </Heading>
+            </Flex>
+            <Divider orientation='horizontal' variant={"solid"} />
             <Container
                 py={8}
                 px={0}
@@ -102,7 +112,7 @@ export const Grades = () => {
                             : grades && Object.keys(grades).length === 0
                             ? 
                             <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
-                                <Text textAlign="center">No Grades to show</Text>
+                                <Text textAlign="center">No grades to show</Text>
                             </Flex>
                             : <SkeletonCustom />
                     }

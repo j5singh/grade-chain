@@ -7,6 +7,7 @@ import MyChart from "../chart/chart";
 import { IGrades } from "../../models/grades";
 import { useNavigate } from "react-router-dom";
 import { Constants } from "../../config/constants";
+import SkeletonCustom from "../../helpers/skeletoncustom";
 
 function Dashboard() {
     const navigate = useNavigate()
@@ -150,10 +151,12 @@ function Dashboard() {
                                     </Table>
                             </Flex>
                         </Flex>
-                    :
-                        <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
+                    : grades && Object.keys(grades).length === 0
+                        ?
+                        <Flex flexDir="column" alignItems="center">
                             <Text textAlign="center">No Latest Grades</Text>
                         </Flex>
+                        : <SkeletonCustom />
                 }
             </Flex>
         </>
