@@ -12,6 +12,10 @@ var validateNameSurname = function(nameORsurname) {
 };
 
 const UserSchema = new Schema({
+    serialNumber: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true,

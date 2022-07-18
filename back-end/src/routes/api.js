@@ -371,12 +371,24 @@ router.post('/scheduledexams', async (req, res) => {
     }
 
     for (var exam of response) {
-        var occurrences = await Subscription.find({"exam._id" : exam._id}).count()
+        var subscribed = []
+        const occurrences = await Subscription.find({"exam._id" : exam._id})
 
-        exam.occurrences = occurrences
+        for (var occ of occurrences) {
+            const userFound = await User.findOne({"serialNumber" : occ.serialNumber})
+            console.log(userFound);
+
+            subscribed.push({
+                "serialNumber" : occ.serialNumber,
+                "surname" : userFound.surname,
+                "name": userFound.name
+            })
+        }
+
+        exam.occurrences = occurrences.length
+        exam.subscribed = subscribed
     }
     
-    console.log(response);
     return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
 });
 

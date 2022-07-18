@@ -47,6 +47,9 @@ const ExamSchema = new Schema({
         validate: [validateCourseCode, 'Please fill a valid course code'],
     },
     occurrences: {
+        type: Number
+    },
+    subscribed: {
         type: Object
     }
 }, {collection: 'exams'});
