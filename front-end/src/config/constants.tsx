@@ -14,7 +14,8 @@ export class Constants {
         return {
             'dashboard': '/student/dashboard',
             'grades': '/student/grades',
-            'results': '/student/results'
+            'results': '/student/results',
+            'booking': '/student/booking'
         }
     }
 

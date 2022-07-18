@@ -10,6 +10,7 @@ const Course = require('../models/course')
 const Grade = require('../models/grade')
 const PendingGrade = require('../models/pending_grade')
 const Exam = require('../models/exam')
+const Subscription = require('../models/subscription')
 
 const { subtle } = require('node:crypto').webcrypto;
 
@@ -333,19 +334,6 @@ router.post('/createexam', async (req, res) => {
     }
 });
 
-// get exams that are open to subscription, the student can now subscribe
-router.post('/opensubscriptions', async (req, res) => {
-    const teacherCode = req.body.teacherCode
-
-    // bisogna trovare tutti gli esami che hanno iscrizioni aperte, quindi in cui
-    // la data di oggi è maggiore della data di apertura dell'esame stesso ma minore
-    // della data di iscrizione, per ogni risultato bisogna controllare se lo studente 
-    // ha già passato quell'esame oppure se c'è un risultato pending per quell'esame, 
-    // se una delle due possibilità si verifica lo studente non si può prenotare
-
-    return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
-});
-
 // get exams that can be registered, you can now assign grades to the students registered to them
 router.post('/finishedexams', async (req, res) => {
     const teacherCode = req.body.teacherCode
@@ -358,6 +346,68 @@ router.post('/finishedexams', async (req, res) => {
     }
 
     return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
+});
+
+// get exams that are open to subscription, the student can now subscribe
+router.post('/opensubscriptions', async (req, res) => {
+    const serialNumber = req.body.serialNumber
+    const currentDate = parseInt((new Date().getTime() + 7200*1e3) / 1000) // seconds
+    var toShow = []
+
+    const result = await Exam.find({})
+
+    // for every exam found
+    for (var exam of result) {
+        if (currentDate >= exam.bookingOpening && currentDate <= exam.bookingClosing ) {
+            const findingGrade = await Grade.findOne({"transaction.student" : serialNumber, "transaction.courseCode" : exam.courseCode})
+            const findingGradePending = await PendingGrade.findOne({"transaction.student" : serialNumber, "transaction.courseCode" : exam.courseCode})
+            const findingExamSub = await Subscription.findOne({"studentCode" : serialNumber, "exam.courseCode" : exam.courseCode})
+
+            if (findingGrade == null && findingGradePending == null && findingExamSub == null) {
+                toShow.push(exam)
+            }
+        }
+    }
+
+    if (toShow.length > 0) 
+        return res.send({ result_msg: "Found exams to show!", status: "SUCCESS", result_data: toShow})
+    else
+        return res.send({result_msg: "No exams found to be shown!", status: "ERROR", result_data: {}})
+});
+
+// student subscription to an exam
+router.post('/subscribe', async (req, res) => {
+    const serialNumber = req.body.serialNumber
+    const exam = req.body.exam // pass the entire exam object
+
+    const findingExamSub = await Subscription.findOne({"serialNumber" : serialNumber, "exam.courseCode" : exam.courseCode})
+
+    if (!findingExamSub) {
+        const creation = await Subscription.create({
+            serialNumber: serialNumber,
+            exam: exam
+        })
+    
+        if(creation) {
+            return res.send({ result_msg: "Successfully subscribed!", status: "SUCCESS", result_data: {} })
+        } else {
+            return res.send({ result_msg: "Couldn't subscribe!", status: "ERROR", result_data: {} })
+        }
+    } else {
+        return res.send({ result_msg: "Student already registered for this exam!", status: "ERROR", result_data: {} })
+    }
+});
+
+// student subscription to an exam
+router.post('/studentsubscription', async (req, res) => {
+    const serialNumber = req.body.serialNumber
+
+    const result = await Subscription.find({"serialNumber" : serialNumber})
+
+    if (result)
+        return res.send({ result_msg: "Subscription found!", status: "SUCCESS", result_data: result })
+    else
+        return res.send({ result_msg: "Couldn't find subscriptions!", status: "ERROR", result_data: {} })
 });
 
 module.exports = router

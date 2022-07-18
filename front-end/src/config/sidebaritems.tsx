@@ -1,4 +1,4 @@
-import { MdDashboard, MdOutlineLaptopChromebook, MdSchool } from "react-icons/md";
+import { MdDashboard, MdOutlineLaptopChromebook, MdSchool, MdModeEditOutline } from "react-icons/md";
 import { Constants } from "./constants";
 
 export const sidebarItems = [
@@ -35,11 +35,17 @@ export const sidebarItems = [
                 roles: 'student'
             },
             {
+                icon: MdModeEditOutline,
+                name: "Book Exams",
+                route: Constants.STUDENT_ROUTES.booking,
+                roles: 'student'
+            },
+            {
                 icon: MdOutlineLaptopChromebook,
                 name: "Exam Booking",
                 route: Constants.TEACHER_ROUTES.exambooking,
                 roles: 'teacher'
             }
         ]
-    }
+    },
 ]

@@ -27,7 +27,7 @@ const ExamSchema = new Schema({
         validate: [validateCourseCode, 'Please fill a valid teacher code'],
     },
     teacher: {
-        type: Number,
+        type: String,
         required: true,
     },
     courseCode: {

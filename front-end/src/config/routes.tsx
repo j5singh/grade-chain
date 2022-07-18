@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import Booking from "../components/booking/booking";
 import Dashboard from "../components/dashboard";
 import { Grades } from "../components/grades";
 import Login from "../components/login";
@@ -35,6 +36,11 @@ function RoutesConfig() {
                 <Route path="results" element={
                     <ProtectedRoute allowedRoles={ROLES.student}>
                         <Results />
+                    </ProtectedRoute>
+                }/>
+                <Route path="booking" element={
+                    <ProtectedRoute allowedRoles={ROLES.student}>
+                        <Booking />
                     </ProtectedRoute>
                 }/>
             </Route>
