@@ -421,7 +421,9 @@ router.post('/createpending', async (req, res) => {
             transaction: transactionObj
         })
 
-        if(!creation) {
+        const deletion = await Subscription.deleteOne({"serialNumber" : studRes.student, "exam.courseCode" : courseCode})
+
+        if(!deletion || !creation) {
             errorList.push({courseCode: courseCode, student: studRes.student})
         }
     }
