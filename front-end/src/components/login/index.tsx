@@ -1,6 +1,6 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Flex, Heading, Input, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Flex, Heading, Input, Switch, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { FaMoon, FaPaperPlane, FaSun } from 'react-icons/fa';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { Constants } from '../../config/constants';
@@ -36,6 +36,16 @@ function Login() {
             navigate(Constants.STUDENT_ROUTES.dashboard, { replace: true })
         } else if (response.status === "SUCCESS_T") {
             navigate(Constants.TEACHER_ROUTES.dashboard, { replace: true })
+        }
+    }
+
+    function loginMode(e: ChangeEvent<HTMLInputElement>) {
+        if (e.target.checked) {
+            setEmail("marco.locatelli@unipr.it")
+            setPassword("san benedetto")
+        } else {
+            setEmail("lorenzo.cipelli@studenti.unipr.it")
+            setPassword("san benedetto")
         }
     }
 
@@ -98,7 +108,11 @@ function Login() {
                             toggleTheme(!theme);
                         }} 
                     >
-                        {theme ? <FaMoon /> : <FaSun />}
+                        <Flex justifyContent={"space-between"} alignItems="center">
+                            {theme ? <FaMoon /> : <FaSun />}
+                            <Text ml={2}>Mode: </Text>
+                            <Switch ml={1} size='sm' onChange={loginMode}/>
+                        </Flex>
                     </Box>
                 </Flex>
             </Flex>
