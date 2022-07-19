@@ -396,6 +396,7 @@ router.post('/scheduledexams', async (req, res) => {
 
 // create pending
 router.post('/createpending', async (req, res) => {
+    const examId = req.body.examId
     const courseCode = req.body.courseCode
     const teacher = req.body.teacher
     const teacherCode = req.body.teacherCode
@@ -435,12 +436,14 @@ router.post('/createpending', async (req, res) => {
             transaction: transactionObj
         })
 
-        const deletion = await Subscription.deleteOne({"serialNumber" : studRes.student, "exam.courseCode" : courseCode})
+        const deleteSub = await Subscription.deleteOne({"serialNumber" : studRes.student, "exam.courseCode" : courseCode})
 
-        if(!deletion || !creation) {
+        if(!deleteSub || !creation) {
             errorList.push({courseCode: courseCode, student: studRes.student})
         }
     }
+
+    const deleteExam = await Exam.deleteOne({"_id" : examId})
 
     if(errorList.length > 0) {
         res.send({ result_msg: "There was an error creating a block!", status: "ERROR", result_data: {errorList} })

@@ -1,19 +1,26 @@
-import { Text, Flex, Heading, Button, Box, Container, HStack, SimpleGrid, Tag, VStack, useDisclosure, Divider } from "@chakra-ui/react";
+import { Text, Flex, Heading, Button, Box, Container, HStack, SimpleGrid, Tag, VStack, useDisclosure, Divider, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import SkeletonCustom from "../../helpers/skeletoncustom";
 import { ICourse } from "../../models/course";
 import { IExam } from "../../models/exam";
 import TeacherModal from "./modal/teachermodal";
+import { SingleDatepicker } from "chakra-dayzed-datepicker";
 
 function TeacherDashboard() {
     const { auth } = useAuth()
-    
+
+    const [openingDate, setOpeningDate] = useState(new Date());
+    const [closingDate, setClosingDate] = useState(new Date());
+    const [examDate, setExamDate] = useState(new Date());
+
     const [courses, setCourses] = useState<ICourse>()
+    const [examModal, setExamModal] = useState(false);
     const [exams, setExams] = useState<IExam>()
     const [dataForModal, setDataForModal] = useState<IExam | null>(null)
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isOpenExam , onOpen: onOpenExam, onClose: onCloseExam } = useDisclosure()
+    const { isOpen: isOpenBooked , onOpen: onOpenBooked, onClose: onCloseBooked } = useDisclosure()
     const cancelRef = useRef()
 
     useEffect(() => {
@@ -48,14 +55,57 @@ function TeacherDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    function showFormExam() {
+        setExamModal(!examModal);
+        onOpenExam()
+    }
+
     function handleModalClick(data: IExam) {       
         setDataForModal(data)
-        onOpen()
+        onOpenBooked()
     }
     
     return (
         <>
             {/* Center Part */}
+            {examModal && (
+                <Modal isOpen={isOpenExam} onClose={onCloseExam}>
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader>Create a new exam</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <FormControl>
+                                <FormLabel>Booking Opening</FormLabel>
+                                <SingleDatepicker
+                                    name="opening-input"
+                                    date={openingDate}
+                                    onDateChange={setOpeningDate}/>
+                            </FormControl>
+                            <FormControl mt={4}>
+                                <FormLabel>Booking Closing</FormLabel>
+                                <SingleDatepicker
+                                    name="closing-input"
+                                    date={closingDate}
+                                    onDateChange={setClosingDate}/>
+                            </FormControl>
+                            <FormControl mt={4}>
+                                <FormLabel>Exam Date</FormLabel>
+                                <SingleDatepicker
+                                    name="date-input"
+                                    date={examDate}
+                                    onDateChange={setExamDate}/>
+                            </FormControl>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button colorScheme='blue' mr={3} onClick={onCloseExam}>
+                                Close
+                            </Button>
+                        <Button colorScheme='blue'>Create</Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
+            )}
             <Flex
                 w="100%"
                 p="3%"
@@ -113,7 +163,6 @@ function TeacherDashboard() {
                                         > 
                                         </Box>
                                     </VStack>
-
                                     <Flex justifyContent="space-between">
                                         <HStack spacing={2}>
                                             <Tag size="md" variant="solid" colorScheme="green">
@@ -123,6 +172,14 @@ function TeacherDashboard() {
                                                 Year: {val.year}
                                             </Tag>
                                         </HStack>
+                                        <Button
+                                            colorScheme="teal"
+                                            fontWeight="bold"
+                                            size="sm"
+                                            onClick={() => {showFormExam()}}
+                                        >
+                                            New Exam
+                                    </Button>
                                     </Flex>
                                 </Flex>
                             )))
@@ -214,7 +271,7 @@ function TeacherDashboard() {
                             : <SkeletonCustom />
                     }
                     </SimpleGrid>
-                    <TeacherModal isOpen={isOpen} cancelRef={cancelRef} onClose={onClose} data={dataForModal}/>
+                    <TeacherModal isOpen={isOpenBooked} cancelRef={cancelRef} onClose={onCloseBooked} data={dataForModal}/>
                 </Container>
             </Flex>
         </>
