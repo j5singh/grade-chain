@@ -10,10 +10,10 @@ function Booking() {
     const { auth } = useAuth()
     const toast = useToast()
 
-    const [ exams, setExams ] = useState<IExam>()
-    const [ isLoading, setIsLoading] = useState(false);
-    const [ subscriptions, setSub ] = useState<IExam>()
-    const [ dataForModal, setDataForModal ] = useState<IExam | null>(null)
+    const [exams, setExams] = useState<IExam>()
+    const [isLoading, setIsLoading] = useState(false);
+    const [subscriptions, setSub] = useState<IExam>()
+    const [dataForModal, setDataForModal] = useState<IExam | null>(null)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef()

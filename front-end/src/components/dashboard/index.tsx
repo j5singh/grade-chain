@@ -1,8 +1,7 @@
 import { Text, Flex, Heading, Thead, Table, Th, Tbody, Tr, Td, Grid, Button } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
-import "./style.css"
 import MyChart from "../chart/chart";
 import { IGrades } from "../../models/grades";
 import { useNavigate } from "react-router-dom";
@@ -12,8 +11,8 @@ import SkeletonCustom from "../../helpers/skeletoncustom";
 function Dashboard() {
     const navigate = useNavigate()
     const { auth } = useAuth()
-    const [gradesChartData, setGradesChartData] = React.useState({labels: [['1° Year'],['2° Year'],['3° Year']], dataset: [[]], average: ""})
-    const [grades, setGrades] = React.useState<IGrades>()
+    const [gradesChartData, setGradesChartData] = useState({labels: [['1° Year'],['2° Year'],['3° Year']], dataset: [[]], average: ""})
+    const [grades, setGrades] = useState<IGrades>()
 
     const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
     const randomRGB = () => `rgba(${randomNum()}, ${randomNum()}, ${randomNum()}, 0.5)`;

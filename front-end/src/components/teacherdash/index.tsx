@@ -1,22 +1,17 @@
-import { Text, Flex, Heading, Thead, Table, Th, Tbody, Tr, Td, Grid, Button, Box, Container, HStack, SimpleGrid, Tag, VStack, useDisclosure, Divider } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
-import { FaAngleDoubleRight } from "react-icons/fa";
+import { Text, Flex, Heading, Button, Box, Container, HStack, SimpleGrid, Tag, VStack, useDisclosure, Divider } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import "./style.css"
-import { useNavigate } from "react-router-dom";
-import { Constants } from "../../config/constants";
 import SkeletonCustom from "../../helpers/skeletoncustom";
 import { ICourse } from "../../models/course";
-import BookingModal from "../booking/modal/bookingmodal";
 import { IExam } from "../../models/exam";
 import TeacherModal from "./modal/teachermodal";
 
 function TeacherDashboard() {
-    const navigate = useNavigate()
     const { auth } = useAuth()
-    const [courses, setCourses] = React.useState<ICourse>()
-    const [exams, setExams] = React.useState<IExam>()
-    const [ dataForModal, setDataForModal ] = useState<IExam | null>(null)
+    
+    const [courses, setCourses] = useState<ICourse>()
+    const [exams, setExams] = useState<IExam>()
+    const [dataForModal, setDataForModal] = useState<IExam | null>(null)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef()
@@ -33,7 +28,6 @@ function TeacherDashboard() {
             const data = await response.json()
             const coursesData = data.result_data
             setCourses(coursesData)
-
         }
 
         async function getExams() {
@@ -47,11 +41,11 @@ function TeacherDashboard() {
             const data = await response.json()
             const examsData = data.result_data
             setExams(examsData)
-
         }
 
         getExams()
         getGrades()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     function handleModalClick(data: IExam) {       
