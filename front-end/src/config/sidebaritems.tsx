@@ -45,6 +45,12 @@ export const sidebarItems = [
                 name: "Exam Booking",
                 route: Constants.TEACHER_ROUTES.exambooking,
                 roles: 'teacher'
+            },
+            {
+                icon: MdModeEditOutline,
+                name: "Your Exams",
+                route: Constants.TEACHER_ROUTES.yourexams,
+                roles: 'teacher'
             }
         ]
     },

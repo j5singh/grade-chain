@@ -22,7 +22,8 @@ export class Constants {
     public static get TEACHER_ROUTES() {
         return {
             'dashboard': '/teacher/dashboard',
-            'exambooking': '/teacher/exambooking'
+            'exambooking': '/teacher/exambooking',
+            'yourexams': '/teacher/yourexams'
         }
     }
 }
