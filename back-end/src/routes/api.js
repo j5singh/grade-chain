@@ -68,7 +68,10 @@ router.post('/login', async (req, res) => {
     if (await bcrypt.compare(password, response.password)) {
         await User.findByIdAndUpdate(response._id, { token: token })
         response.token = token
-        return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })
+        if (response.roles === "student")
+            return res.send({ result_msg: "OK", status: "SUCCESS_S", result_data: response })
+        else if (response.roles === "teacher")
+        return res.send({ result_msg: "OK", status: "SUCCESS_T", result_data: response })    
     }
     // If you reach till here, it means that the email is found in the records but the password is incorrect
     return res.send({ result_msg: "Invalid password!", status: "ERROR", result_data: {} })
@@ -361,7 +364,7 @@ router.post('/teachingcourses', async (req, res) => {
 
 // show teacher exams with participation
 router.post('/scheduledexams', async (req, res) => {
-    const teacherCode = req.body.serialNumber
+    const teacherCode = req.body.teacherCode
 
     const response = await Exam.find({ teacherCode: teacherCode })
 
@@ -376,7 +379,6 @@ router.post('/scheduledexams', async (req, res) => {
 
         for (var occ of occurrences) {
             const userFound = await User.findOne({"serialNumber" : occ.serialNumber})
-            console.log(userFound);
 
             subscribed.push({
                 "serialNumber" : occ.serialNumber,
@@ -387,7 +389,7 @@ router.post('/scheduledexams', async (req, res) => {
 
         exam.occurrences = occurrences.length
         exam.subscribed = subscribed
-    }
+    }   
     
     return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
 });

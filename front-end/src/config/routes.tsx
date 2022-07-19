@@ -6,6 +6,7 @@ import Login from "../components/login";
 import { ProtectedRoute } from "../components/protectedroute/protectedroute";
 import Register from "../components/register";
 import { Results } from "../components/results/results";
+import TeacherDashboard from "../components/teacherdash";
 
 function RoutesConfig() {
     const ROLES = {
@@ -48,7 +49,7 @@ function RoutesConfig() {
             <Route path="/teacher">
                 <Route path="dashboard" element={
                     <ProtectedRoute allowedRoles={ROLES.teacher}>
-                        <Dashboard/>
+                        <TeacherDashboard/>
                     </ProtectedRoute>
                 }/>
                 <Route path="exambooking" element={

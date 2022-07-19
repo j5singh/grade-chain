@@ -5,7 +5,15 @@ export interface IExam {
     teacher: string,
     courseCode: string,
     courseName: string,
-    examDate: number
+    examDate: number,
+    occurrences: number,
+    subscribed: IUser[]
+}
+
+export interface IUser {
+    "serialNumber" :string,
+    "surname" : string,
+    "name": string
 }
 
 export interface ISubscription {

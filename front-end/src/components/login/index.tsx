@@ -32,8 +32,10 @@ function Login() {
         setError(response)
         setIsLoading(false)
         
-        if (response.status === "SUCCESS") {
+        if (response.status === "SUCCESS_S") {
             navigate(Constants.STUDENT_ROUTES.dashboard, { replace: true })
+        } else if (response.status === "SUCCESS_T") {
+            navigate(Constants.TEACHER_ROUTES.dashboard, { replace: true })
         }
     }
 
