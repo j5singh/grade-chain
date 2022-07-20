@@ -73,46 +73,46 @@ function VerbModal({isOpen, cancelRef, onClose, data} : {isOpen: any, cancelRef:
     }
 
     return (
-    <>
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>Verbalize the test</ModalHeader>
-                <ModalCloseButton />
-                <Divider orientation='horizontal' variant={"solid"} />
-                <ModalBody>
-                    <FormControl>
-                        {data?.subscribed && (Object.entries(data.subscribed)).map(([key, val]) => 
-                            <>
-                                <HStack p={2}>
-                                    <Box>{val.serialNumber} - {val.surname}</Box>
-                                    <Select
-                                        onChange={(e) => {setSelectedGrades(e.target.value, key, val.serialNumber)}}
-                                        placeholder='Select Grade'>
-                                        {grades.map((item, i) => <option key={i} value={item}>{item}</option>)}
-                                    </Select>
-                                </HStack>
-                            </>
-                        )}
-                    </FormControl>
-                </ModalBody>
-                <Divider orientation='horizontal' variant={"solid"} />
-                <ModalFooter>
-                    <Button ref={cancelRef} mr={3} onClick={onClose}>
-                        Cancel
-                    </Button>
-                    <Button
-                        // isDisabled={data?.subscribed.length != selectedGrades.filter(Boolean).length}
-                        colorScheme='teal'
-                        isLoading={isLoading} 
-                        onClick={handleSubmit}>
-                        Create
-                    </Button>
-                </ModalFooter>
-            </ModalContent>
-        </Modal>
-    </>
-)
+        <>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Verbalize the test</ModalHeader>
+                    <ModalCloseButton />
+                    <Divider orientation='horizontal' variant={"solid"} />
+                    <ModalBody>
+                        <FormControl>
+                            {data?.subscribed && (Object.entries(data.subscribed)).map(([key, val]) => 
+                                <>
+                                    <HStack p={2}>
+                                        <Box>{val.serialNumber} - {val.surname}</Box>
+                                        <Select
+                                            onChange={(e) => {setSelectedGrades(e.target.value, key, val.serialNumber)}}
+                                            placeholder='Select Grade'>
+                                            {grades.map((item, i) => <option key={i} value={item}>{item}</option>)}
+                                        </Select>
+                                    </HStack>
+                                </>
+                            )}
+                        </FormControl>
+                    </ModalBody>
+                    <Divider orientation='horizontal' variant={"solid"} />
+                    <ModalFooter>
+                        <Button ref={cancelRef} mr={3} onClick={onClose}>
+                            Cancel
+                        </Button>
+                        <Button
+                            // isDisabled={data?.subscribed.length != selectedGrades.filter(Boolean).length}
+                            colorScheme='teal'
+                            isLoading={isLoading} 
+                            onClick={handleSubmit}>
+                            Create
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
+    )
 }
 
 export default VerbModal
