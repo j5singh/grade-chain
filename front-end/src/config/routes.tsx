@@ -9,6 +9,7 @@ import { Results } from "../components/results/results";
 import TeacherDashboard from "../components/teacherdash";
 import TeacherExams from "../components/teacherexams/teacherexams";
 import Verbalisation from "../components/verbalisation/verbalisation";
+import NotFound from "../helpers/pagenotfound";
 
 function RoutesConfig() {
     const ROLES = {
@@ -65,7 +66,7 @@ function RoutesConfig() {
                     </ProtectedRoute>
                 }/>
             </Route>
-            <Route path="*" element={<><h1>Page Not Found</h1></>}></Route>
+            <Route path="*" element={<NotFound />}></Route>
         </Routes>
     )
 }
