@@ -53,11 +53,6 @@ function RoutesConfig() {
                         <TeacherDashboard/>
                     </ProtectedRoute>
                 }/>
-                <Route path="exambooking" element={
-                    <ProtectedRoute allowedRoles={ROLES.teacher}>
-                        <Grades />
-                    </ProtectedRoute>
-                }/>
                 <Route path="yourexams" element={
                     <ProtectedRoute allowedRoles={ROLES.teacher}>
                         <TeacherExams />
