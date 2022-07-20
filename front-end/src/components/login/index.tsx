@@ -21,7 +21,7 @@ function Login() {
     const formBackground = useColorModeValue("gray.100", "gray.700");
     
     const { toggleColorMode } = useColorMode();
-    const { auth, doLogin } = useAuth();
+    const { doLogin } = useAuth();
     const navigate = useNavigate();
 
     async function handleSubmit(e:any) {
@@ -33,8 +33,7 @@ function Login() {
         setIsLoading(false)
         
         if (response.status === "SUCCESS") {
-            console.log(auth.roles.includes("student"), auth.roles);
-            if (auth.roles.includes("student"))                
+            if (response.result_data.roles.includes("student"))
                 navigate(Constants.STUDENT_ROUTES.dashboard, { replace: true })
             else
                 navigate(Constants.TEACHER_ROUTES.dashboard, { replace: true })
