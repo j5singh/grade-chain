@@ -194,7 +194,7 @@ router.post('/registergrade', async (req, res) => {
                     teacher: pendingGrade.transaction.teacher,
                     teacherCode: pendingGrade.transaction.teacherCode,
                     student: pendingGrade.transaction.student,
-                    result: pendingGrade.transaction.result,
+                    result: parseInt(pendingGrade.transaction.result),
                     date: pendingGrade.transaction.date
                 }
             })
