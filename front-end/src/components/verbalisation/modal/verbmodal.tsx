@@ -1,6 +1,5 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, ModalFooter, Button, Divider, Select, useToast, Box, Flex, HStack } from "@chakra-ui/react"
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, ModalFooter, Button, Divider, Select, useToast, Box, HStack } from "@chakra-ui/react"
 import { useState } from "react";
-import useAuth from "../../../hooks/useAuth";
 import { IExam } from "../../../models/exam";
 
 function VerbModal({isOpen, cancelRef, onClose, data} : {isOpen: any, cancelRef: any, onClose: any, data: IExam | null}) {
@@ -14,7 +13,7 @@ function VerbModal({isOpen, cancelRef, onClose, data} : {isOpen: any, cancelRef:
         e.preventDefault();
         setIsLoading(true)  
 
-        if (data?.subscribed.length == selectedGrades.filter(Boolean).length) {
+        if (data?.subscribed.length === selectedGrades.filter(Boolean).length) {
             const response = await fetch('/api/createpending', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

@@ -1,10 +1,8 @@
-import { Text, Flex, Heading, Box, SimpleGrid, Tag, VStack, Divider, Button, Tooltip, useDisclosure } from "@chakra-ui/react";
+import { Text, Flex, Heading, Box, SimpleGrid, Tag, VStack, Button, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import SkeletonCustom from "../../helpers/skeletoncustom";
 import { IExam } from "../../models/exam";
-import NewExamModal from "../teacherexams/modal/newexam";
-import TeacherModal from "../teacherexams/modal/teachermodal";
 import VerbModal from "./modal/verbmodal";
 
 function Verbalisation() {
@@ -16,6 +14,7 @@ function Verbalisation() {
 
     useEffect(() => {
         getExams()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     async function getExams() {
