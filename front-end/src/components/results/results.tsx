@@ -104,7 +104,7 @@ export const Results = () => {
         getPendingGrades()
     }
 
-    async function declineGrade(dataToDecline: IPendingGrades) {
+    async function declineGrade(dataToDecline: IPendingGrades, passedOrNot: boolean) {
         const pendGrade = dataToDecline
         setIsLoading(true)
 
@@ -129,7 +129,7 @@ export const Results = () => {
         } else {
             toast({
                 position: 'bottom-right',
-                title: 'Result declined!',
+                title: passedOrNot ? 'Result declined!' : 'Result acknowledged successfully!',
                 description: data.result_msg,
                 status: 'success',
                 duration: 4000,
@@ -165,8 +165,13 @@ export const Results = () => {
         if (modalType === "accept") {
             acceptGrade(dataToProcess)
         } else if (modalType === "decline") {
-            declineGrade(dataToProcess)
+            declineGrade(dataToProcess, true)
         }
+    }
+
+    async function onAcceptNotPassedExam(dataToProcess: IPendingGrades) {
+        console.log(dataToProcess);
+        declineGrade(dataToProcess, false)
     }
 
     return (
@@ -223,36 +228,64 @@ export const Results = () => {
                                         > 
                                         </Box>
                                     </VStack>
-                                    <Flex justifyContent="space-between">
-                                        <HStack spacing={2}>
-                                            <Tag size="md" variant="outline" colorScheme="cyan">
-                                                Year {val.transaction.year}
-                                            </Tag>
+                                    <Flex gridGap={3} justifyContent="space-between">
+                                        <Tag size="md" variant="outline" colorScheme="cyan">
+                                            Year {val.transaction.year}
+                                        </Tag>
+                                        <Tag size="md" variant="outline" colorScheme="cyan">
+                                            {new Date((Number(val.transaction.date) * 1e3) + 7200*1e3).toISOString().slice(0, 10)}
+                                        </Tag>
+                                        {
+                                            val.transaction.result !== "ins" &&
                                             <Tag size="md" variant="solid" colorScheme="green">
                                                 {val.transaction.result}/30
                                             </Tag>
-                                        </HStack >
+                                        }
+                                        {
+                                            val.transaction.result === "ins" &&
+                                            <Tag size="md" variant="solid" colorScheme="red">
+                                                Not Passed
+                                            </Tag>
+                                        }
                                     </Flex>
                                     <Flex mt={3} alignItems={"center"} justifyContent="space-between">
                                         <HStack spacing={2}>
-                                            <Button
-                                                colorScheme="whatsapp"
-                                                fontWeight="bold"
-                                                size="sm"
-                                                isLoading={isLoading}
-                                                onClick={() => openResultModal(val, "accept")}
-                                            >
-                                                Accept
-                                            </Button>
-                                            <Button
-                                                colorScheme="red"
-                                                fontWeight="bold"
-                                                size="sm"
-                                                isLoading={isLoading}
-                                                onClick={() => openResultModal(val, "decline")}
-                                            >
-                                                Decline
-                                            </Button>
+                                            {val.transaction.result !== "ins" &&
+                                                <>
+                                                    <Button
+                                                        colorScheme="whatsapp"
+                                                        fontWeight="bold"
+                                                        size="sm"
+                                                        isLoading={isLoading}
+                                                        onClick={() => openResultModal(val, "accept")}
+                                                    >
+                                                        Accept
+                                                    </Button>
+                                                    <Button
+                                                        colorScheme="red"
+                                                        fontWeight="bold"
+                                                        size="sm"
+                                                        isLoading={isLoading}
+                                                        onClick={() => openResultModal(val, "decline")}
+                                                    >
+                                                        Decline
+                                                    </Button>
+                                                </>
+                                            }
+                                            {
+                                                val.transaction.result === "ins" &&
+                                                <>
+                                                    <Button
+                                                        colorScheme="pink"
+                                                        fontWeight="bold"
+                                                        size="sm"
+                                                        isLoading={isLoading}
+                                                        onClick={() => onAcceptNotPassedExam(val)}
+                                                    >
+                                                        I Understand
+                                                    </Button>
+                                                </>
+                                            }
                                         </HStack>
                                     </Flex>
                                 </Flex>
