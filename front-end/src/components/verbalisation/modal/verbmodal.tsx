@@ -33,7 +33,7 @@ function VerbModal({isOpen, cancelRef, onClose, data} : {isOpen: any, cancelRef:
             if (dataRes.status === "SUCCESS") {
                 toast({
                     title: 'Exam Verbalized!',
-                    description: 'Some grades are missing, please fill them up!',                   status: 'success',
+                    status: 'success',
                     duration: 4500,
                     isClosable: true,
                     position: 'bottom-right'
@@ -50,7 +50,7 @@ function VerbModal({isOpen, cancelRef, onClose, data} : {isOpen: any, cancelRef:
             }
 
             onClose()
-            
+
         } else {
             toast({
                 title: 'Error',
