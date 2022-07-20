@@ -305,20 +305,6 @@ router.post('/studentsubscription', async (req, res) => {
 
 // TEACHER QUERY'S
 
-// get exams that can be registered, you can now assign grades to the students registered to them
-router.post('/finishedexams', async (req, res) => {
-    const teacherCode = req.body.teacherCode
-    const todayDate = parseInt((new Date().getTime() / 1000).toFixed(0))
-
-    const response = await Exam.find({ teacherCode: teacherCode, examDate: {$lt: todayDate} })
-
-    if (!response) {
-        return res.send({ result_msg: "No exam was found", status: "ERROR", result_data: {} })
-    }
-
-    return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
-});
-
 // teacher creates a new exam upon which student can book their participation
 router.post('/createexam', async (req, res) => {
     const bookOpening = req.body.bookOpening // Unix Timestamp
@@ -327,8 +313,11 @@ router.post('/createexam', async (req, res) => {
     const teacher = req.body.teacher
     const courseCode = (req.body.courseCode).toString()
     const examDate = req.body.examDate // Unix Timestamp
+    const todayDate = parseInt(((new Date().getTime() / 1000) + 7200).toFixed(0))
 
-    if ((bookOpening >= bookClosing) || (bookClosing >= examDate)) {
+    if (bookOpening <= todayDate) {
+        return res.send({ result_msg: "Dates shouldn't be prior today", status: "ERROR", result_data: {}})
+    } else if ((bookOpening >= bookClosing) || (bookClosing >= examDate)) {
         return res.send({ result_msg: "Dates should be in this order: Opening < Closing < Exam", status: "ERROR", result_data: {}})
     }
 
@@ -367,6 +356,7 @@ router.post('/teachingcourses', async (req, res) => {
 // show teacher exams with participation
 router.post('/scheduledexams', async (req, res) => {
     const teacherCode = req.body.teacherCode
+    const verb = req.body.verbalize // if you want the exams to veralize
 
     const response = await Exam.find({ teacherCode: teacherCode })
 
@@ -392,6 +382,19 @@ router.post('/scheduledexams', async (req, res) => {
         exam.occurrences = occurrences.length
         exam.subscribed = subscribed
     }   
+
+    if (verb) {
+        var toKeep = []
+        const todayDate = parseInt(((new Date().getTime() / 1000) + 7200).toFixed(0))
+
+        for (var exam of response) {
+            if (exam.examDate <= todayDate) {
+                toKeep.push(exam)
+            }
+        }
+
+        return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: toKeep })
+    }
     
     return res.send({ result_msg: "Exams found!", status: "SUCCESS", result_data: response })
 });

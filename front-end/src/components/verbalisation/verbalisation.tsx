@@ -1,29 +1,21 @@
-import { Box, Button, Divider, Flex, Heading, SimpleGrid, Tag, useDisclosure, VStack, Text, Tooltip } from "@chakra-ui/react"
-import { useEffect, useRef, useState } from "react"
-import { FaPlus } from "react-icons/fa"
-import SkeletonCustom from "../../helpers/skeletoncustom"
-import useAuth from "../../hooks/useAuth"
-import { ICourse } from "../../models/course"
-import { IExam, INewExam } from "../../models/exam"
-import NewExamModal from "./modal/newexam"
-import TeacherModal from "./modal/teachermodal"
+import { Text, Flex, Heading, Box, SimpleGrid, Tag, VStack, Divider, Button, Tooltip, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
+import useAuth from "../../hooks/useAuth";
+import SkeletonCustom from "../../helpers/skeletoncustom";
+import { IExam } from "../../models/exam";
+import NewExamModal from "../teacherexams/modal/newexam";
+import TeacherModal from "../teacherexams/modal/teachermodal";
+import VerbModal from "./modal/verbmodal";
 
-function TeacherExams() {
-    const { isOpen: isOpenSub , onOpen: onOpenSub, onClose: onCloseSub } = useDisclosure()
-    const { isOpen: isOpenExam , onOpen: onOpenExam, onClose: onCloseExam } = useDisclosure()
-    const cancelRef = useRef()
-
+function Verbalisation() {
+    const [dataForModal, setDataForModal] = useState<IExam | null>(null)
+    const { isOpen , onOpen, onClose } = useDisclosure()
     const { auth } = useAuth()
-    const [exams, setExams] = useState<IExam[] | undefined>()
-    const [courses, setCourses] = useState<ICourse | null>(null)
-    const [dataForModalExam, setDataForModalExam] = useState<INewExam | null>(null)
-    const [dataForModalSub, setDataForModalSub] = useState<IExam | null>(null)
+    const cancelRef = useRef()
+    const [exams, setExams] = useState<IExam>()
 
     useEffect(() => {
         getExams()
-        getAllCourses()
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     async function getExams() {
@@ -32,71 +24,34 @@ function TeacherExams() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 teacherCode: auth.serialNumber,
-                varbalize: false                   
+                verbalize: true
             }),
         })
-        
         const data = await response.json()
         const examsData = data.result_data
         setExams(examsData)
     }
 
-    async function getAllCourses() {
-        const response = await fetch('/api/teachingcourses', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                teacherCode: auth.serialNumber                    
-            }),
-        })
-
-        const data = await response.json()
-        const examsData = data.result_data
-        setCourses(examsData)            
+    function handleModalClick(data: IExam) {       
+        setDataForModal(data)
+        onOpen()
     }
 
-    function handleModalClick() {
-        const examToSend: INewExam = {
-            serialNumber: auth.serialNumber,
-            surname: auth.surname,
-            courses: courses
-        }
-
-        setDataForModalExam(examToSend)
-        onOpenExam()
-    }
-
-    function onCloseExamRun() {
-        onCloseExam()
+    function onCloseVerb() {
+        onClose()
         getExams()
-    }
-
-    function handleModalClickSub(data: IExam) {       
-        setDataForModalSub(data)
-        onOpenSub()
     }
     
     return (
         <>
             <Flex flexDir={"column"} p="3%">
-                <Flex alignItems={"center"} justifyContent="flex-end">
-                    <Button 
-                        fontWeight={"bold"} 
-                        leftIcon={<FaPlus />} 
-                        variant={"solid"} 
-                        colorScheme="pink" 
-                        size={"sm"} 
-                        onClick={() => {handleModalClick()}} >
-                        New Exam
-                    </Button>
-                </Flex>
-                <Divider mt={3} mb={2} orientation='horizontal' variant={"solid"} />
                 <Heading
                     fontWeight={"normal"}
                     mb={4}
                     letterSpacing="tight"
                 >
-                    Your Scheduled Exams
+                    Finished exams
+                    <Text fontSize='xl'>Click on verbalize to assign results</Text>
                 </Heading>
                 <Flex>
                     <SimpleGrid
@@ -152,9 +107,9 @@ function TeacherExams() {
                                                 colorScheme="teal"
                                                 fontWeight="bold"
                                                 size="xs"
-                                                onClick={() => {handleModalClickSub(val)}}
+                                                onClick={() => {handleModalClick(val)}}
                                             >
-                                                More
+                                                Verbalize
                                             </Button>
                                         </Flex>
                                     </Flex>
@@ -169,10 +124,9 @@ function TeacherExams() {
                     </SimpleGrid>
                 </Flex>
             </Flex>
-            <NewExamModal isOpenExam={isOpenExam} cancelRef={cancelRef} onCloseExam={onCloseExamRun} data={dataForModalExam}/>
-            <TeacherModal isOpen={isOpenSub} cancelRef={cancelRef} onClose={onCloseSub} data={dataForModalSub}/>
+            <VerbModal isOpen={isOpen} cancelRef={cancelRef} onClose={onCloseVerb} data={dataForModal}/>
         </>
     )
 }
 
-export default TeacherExams
+export default Verbalisation;

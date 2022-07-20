@@ -1,6 +1,7 @@
 import { ICourse } from "./course"
 
 export interface IExam {
+    _id: string,
     bookingOpening: number,
     bookingClosing: number,
     teacherCode: string,

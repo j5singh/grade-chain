@@ -23,7 +23,8 @@ export class Constants {
         return {
             'dashboard': '/teacher/dashboard',
             'exambooking': '/teacher/exambooking',
-            'yourexams': '/teacher/yourexams'
+            'yourexams': '/teacher/yourexams',
+            'verbalisation': '/teacher/verbalisation'
         }
     }
 }
