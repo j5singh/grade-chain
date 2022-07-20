@@ -1,14 +1,13 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, ModalFooter, Button, Divider, Select, useToast } from "@chakra-ui/react"
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { useState } from "react";
-import { ICourse } from "../../../models/course";
 import { INewExam } from "../../../models/exam";
 
 function NewExamModal({isOpenExam, cancelRef, onCloseExam, data} : {isOpenExam: any, cancelRef: any, onCloseExam: any, data: INewExam | null}) {
     const [openingDate, setOpeningDate] = useState(new Date());
     const [closingDate, setClosingDate] = useState(new Date());
     const [examDate, setExamDate] = useState(new Date());
-    const [selectedExam, setSelectedExam] = useState<string>();
+    const [selectedExam, setSelectedExam] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
 
     const toast = useToast()
@@ -73,7 +72,7 @@ function NewExamModal({isOpenExam, cancelRef, onCloseExam, data} : {isOpenExam: 
                             <Select 
                                 placeholder='Select option'
                                 onChange={(e) => {setSelectedExam(e.target.value)}}
-                                >
+                            >
                                 {data?.courses && (Object.entries(data.courses)).map(([key, val]) => <option key={key} value={val.courseCode}>{val.courseName} - {val.courseCode}</option>)}
                             </Select>
                         </FormControl>
@@ -101,10 +100,11 @@ function NewExamModal({isOpenExam, cancelRef, onCloseExam, data} : {isOpenExam: 
                     </ModalBody>
                     <Divider orientation='horizontal' variant={"solid"} />
                     <ModalFooter>
-                        <Button mr={3} onClick={onCloseExam}>
+                        <Button ref={cancelRef} mr={3} onClick={onCloseExam}>
                             Cancel
                         </Button>
-                        <Button 
+                        <Button
+                            isDisabled={selectedExam === ""}
                             colorScheme='teal'
                             isLoading={isLoading} 
                             onClick={handleSubmit}>
