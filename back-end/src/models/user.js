@@ -36,12 +36,11 @@ const UserSchema = new Schema({
     },
     roles: {
         type: String,
-        enum: ['user', 'admin'],
-        default: 'user'
+        enum: ['student', 'teacher'],
+        default: 'student'
     },
     token: {
         type: String,
-        required: true,
     },
     password: {
         type: String,

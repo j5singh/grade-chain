@@ -39,7 +39,7 @@ function TeacherModal({isOpen, onClose, cancelRef, data} : {isOpen: any, onClose
                         <Box mt='3'>
                             <Stat>
                                 <StatLabel>Subscribers</StatLabel>
-                                {data?.subscribed.length != 0 ? 
+                                {data?.subscribed.length !== 0 ? 
                                     (data?.subscribed.map(item => <StatHelpText key={item.serialNumber}>{item.serialNumber} - {item.surname} {item.name}</StatHelpText>))
                                 :
                                     "None" }

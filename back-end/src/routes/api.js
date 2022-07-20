@@ -34,8 +34,17 @@ router.post('/register', async (req, res) => {
         return res.send({ result_msg: "The inserted credentials seem to be already registered inside our database!", status: "ERROR", result_data: {} })
     }
 
+    let serialNumber
+    let foundUnique = false
+    while (!foundUnique) {
+        serialNumber = Math.floor(100000 + Math.random() * 900000)
+        const response = await User.findOne({serialNumber: serialNumber})
+        if (!response) foundUnique = true
+    }
+
     try {
         creation = await User.create({
+            serialNumber: serialNumber,
             name: name, 
             surname: surname,
             email: email,
@@ -45,7 +54,7 @@ router.post('/register', async (req, res) => {
         return res.send({ result_msg: error.message, status: "ERROR", result_data: {} })
     }
 
-    // If you reach till here, it means that the email is found in the records but the password is incorrect
+    // If you reach till here, it means that the account was registered successfully
     return res.send({ result_msg: "Successfully created!", status: "SUCCESS", result_data: {} })
 });
 

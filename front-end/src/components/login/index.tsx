@@ -4,12 +4,7 @@ import React, { ChangeEvent } from 'react';
 import { useNavigate, Link as ReactLink } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { Constants } from '../../config/constants';
-
-interface Error {
-    result_data: any,
-    result_msg: string,
-    status: string
-}
+import { Error } from '../../models/error';
 
 function Login() {
     const [theme, toggleTheme] = React.useState(false);

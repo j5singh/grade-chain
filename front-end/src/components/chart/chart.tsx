@@ -29,7 +29,7 @@ function BarChart({chartData} : {chartData:any}) {
   };
   
   return ( chartData.average === "" ? <SkeletonCustom /> : 
-    chartData.average !== "0" ? <Bar height={60} options={options} data={data} /> 
+    chartData.average !== "0" ? <Bar options={options} data={data} />
     : null )
 }
 
