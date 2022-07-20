@@ -1,3 +1,5 @@
+import { ICourse } from "./course"
+
 export interface IExam {
     bookingOpening: number,
     bookingClosing: number,
@@ -11,12 +13,18 @@ export interface IExam {
 }
 
 export interface IUser {
-    "serialNumber" :string,
-    "surname" : string,
+    "serialNumber": string,
+    "surname": string,
     "name": string
 }
 
 export interface ISubscription {
     serialNumber: number,
     exam: IExam
+}
+
+export interface INewExam {
+    serialNumber: string,
+    surname: string,
+    courses: ICourse | null
 }

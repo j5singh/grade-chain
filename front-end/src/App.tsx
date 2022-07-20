@@ -6,7 +6,7 @@ import RoutesConfig from './config/routes';
 import useAuth from './hooks/useAuth';
 
 function App() {
-  const { verifyToken } = useAuth();
+  const { auth, verifyToken } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,7 +15,10 @@ function App() {
       if(result.status === "ERROR") {
         navigate(Constants.AUTH_ROUTES.login)
       } else {
-        navigate(Constants.STUDENT_ROUTES.dashboard, { replace: true })
+        if (auth.roles.includes("student"))
+          navigate(Constants.STUDENT_ROUTES.dashboard, { replace: true })
+        else
+          navigate(Constants.TEACHER_ROUTES.dashboard, { replace: true })
       }
     }
 

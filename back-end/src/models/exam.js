@@ -1,21 +1,10 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-var validateCourseCode = function(nameORsurname) {
-    var re = /^[0-9]+$/;
-    return re.test(nameORsurname)
-};
-
-var validateCourseName = function(nameORsurname) {
-    var re = /^[a-zA-Z]+$/;
-    return re.test(nameORsurname)
-};
-
 const ExamSchema = new Schema({
     bookingOpening: {
         type: Number,
-        required: true,
-        validate: [validateCourseName, 'Please fill a valid course name']
+        required: true
     },
     bookingClosing: {
         type: Number,
@@ -23,8 +12,7 @@ const ExamSchema = new Schema({
     },
     teacherCode: {
         type: String,
-        required: true,
-        validate: [validateCourseCode, 'Please fill a valid teacher code'],
+        required: true
     },
     teacher: {
         type: String,
@@ -33,18 +21,15 @@ const ExamSchema = new Schema({
     courseCode: {
         type: String,
         required: true,
-        unique: true,
-        validate: [validateCourseCode, 'Please fill a valid course code'],
+        unique: true
     },
     courseName: {
         type: String,
-        required: true,
-        validate: [validateCourseCode, 'Please fill a valid course code'],
+        required: true
     },
     examDate: {
         type: Number,
-        required: true,
-        validate: [validateCourseCode, 'Please fill a valid course code'],
+        required: true
     },
     occurrences: {
         type: Number

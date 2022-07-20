@@ -68,10 +68,7 @@ router.post('/login', async (req, res) => {
     if (await bcrypt.compare(password, response.password)) {
         await User.findByIdAndUpdate(response._id, { token: token })
         response.token = token
-        if (response.roles === "student")
-            return res.send({ result_msg: "OK", status: "SUCCESS_S", result_data: response })
-        else if (response.roles === "teacher")
-        return res.send({ result_msg: "OK", status: "SUCCESS_T", result_data: response })    
+        return res.send({ result_msg: "OK", status: "SUCCESS", result_data: response })    
     }
     // If you reach till here, it means that the email is found in the records but the password is incorrect
     return res.send({ result_msg: "Invalid password!", status: "ERROR", result_data: {} })
@@ -327,10 +324,15 @@ router.post('/createexam', async (req, res) => {
     const bookOpening = req.body.bookOpening // Unix Timestamp
     const bookClosing = req.body.bookClosing // Unix Timestamp
     const teacherCode = req.body.serialNumber
-    const teacher = req.body.surname
-    const courseCode = req.body.courseCode
-    const courseName = req.body.courseName
+    const teacher = req.body.teacher
+    const courseCode = (req.body.courseCode).toString()
     const examDate = req.body.examDate // Unix Timestamp
+
+    if ((bookOpening >= bookClosing) || (bookClosing >= examDate)) {
+        return res.send({ result_msg: "Dates should be in this order: Opening < Closing < Exam", status: "ERROR", result_data: {}})
+    }
+
+    const getCourseName = await Course.findOne({courseCode: courseCode}, {_id: 0, courseName: 1})
 
     const creation = await Exam.create({
         bookingOpening: bookOpening,
@@ -338,7 +340,7 @@ router.post('/createexam', async (req, res) => {
         teacherCode: teacherCode,
         teacher: teacher,
         courseCode: courseCode,
-        courseName: courseName,
+        courseName: getCourseName.courseName,
         examDate: examDate
     })
 

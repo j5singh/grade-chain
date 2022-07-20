@@ -101,15 +101,8 @@ export const AuthProvider = ({ children }: ChildProps) => {
         const data = await response.json();
         if (data.status !== "ERROR") {
             let parseObj: User = data.result_data
-            setAuth({
-                serialNumber: parseObj.serialNumber,
-                name: parseObj.name,
-                surname: parseObj.surname,
-                email: parseObj.email,
-                roles: parseObj.roles,
-                token: parseObj.token,
-                password: parseObj.password
-            })
+            setAuth(parseObj)          
+            
             setIsAuthenticated(true);
             localStorage.setItem(Constants.COMPANY_KEY + '-token', parseObj.token);
 
