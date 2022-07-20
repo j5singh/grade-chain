@@ -1,7 +1,7 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Flex, Heading, Input, Switch, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Flex, Heading, Input, Stack, Switch, Text, Link, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { FaMoon, FaPaperPlane, FaSun } from 'react-icons/fa';
 import React, { ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as ReactLink } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { Constants } from '../../config/constants';
 
@@ -115,6 +115,11 @@ function Login() {
                             <Switch ml={1} size='sm' onChange={loginMode}/>
                         </Flex>
                     </Box>
+                    <Stack pt={6}>
+                        <Text align={'center'}>
+                            Not registered yet? <Link as={ReactLink} to="/auth/register" color={'blue.400'}>Register now</Link>
+                        </Text>
+                    </Stack>
                 </Flex>
             </Flex>
         </>

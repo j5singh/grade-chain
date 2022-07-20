@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Booking from "../components/booking/booking";
 import Dashboard from "../components/dashboard";
 import { Grades } from "../components/grades";
@@ -66,7 +66,8 @@ function RoutesConfig() {
                     </ProtectedRoute>
                 }/>
             </Route>
-            <Route path="*" element={<NotFound />}></Route>
+            <Route path="notfound" element={<NotFound />}/>
+            <Route path="*" element={<Navigate to={"/notfound"} />}></Route>
         </Routes>
     )
 }
