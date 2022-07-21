@@ -1,5 +1,4 @@
-![](assets/media/image1.png){width="3.915203412073491in"
-height="0.7604166666666666in"}
+![](assets/media/image1.png)
 
 -   [Introduzione](#Introduzione)
 
@@ -29,7 +28,7 @@ height="0.7604166666666666in"}
 
 -   [Database](#Database)
 
--   [Conclusioni](#Conlusioni)
+-   [Conclusioni](#Conclusioni)
 
 Jasprit Singh - 305884
 
@@ -37,7 +36,7 @@ Jasprit Singh - 305884
 
 Cipelli Lorenzo -- 305784
 
-[Introduzione]
+## Introduzione
 
 Le blockchain sono come dei "libri mastri" per immagazzinare
 informazioni su transazioni. Questi dati sono raccolti all'interno di
@@ -73,7 +72,7 @@ logicamente "unidirezionali", nel senso che vanno solo da docente a
 studente, infatti è solo lo studente che può ricevere i voti e il
 docente che può caricarli.
 
-[Struttura del blocco]
+## Struttura del blocco
 
 Come già detto i blocchi sono collegati fra di loro grazie a delle firme
 (digest) che vengono prodotti nel momento della validazione del blocco,
@@ -117,26 +116,26 @@ the previous
 block.]
 (assets/media/image3.png)
 
-[Funzionamento Programma]
+## Funzionamento Programma
 
 ![](assets/media/image4.png)
 ![](assets/media/image5.png)
 
 ![](assets/media/image7.png)
-Navigazione come Studente
+## Navigazione come Studente
 
 ![](assets/media/image8.png)
 
 ![](assets/media/image9.png)
 ![](assets/media/image10.png)
 
-[]Navigazione come Docente
+## Navigazione come Docente
 
 ![](assets/media/image11.png)
 
 ![](assets/media/image15.png)
 
-[Database]
+## Database
 
 In questo paragrafo saranno visitate le strutture della collections
 usate per immagazzinare i dati del programma. Parliamo di collections in
@@ -186,7 +185,7 @@ Le collections utilizzate sono state:
     il ruolo, anche in questo caso, se si vuole aggiungere un docente
     dovrà intervanire un amministratore del DBMS;
 
-[Conclusioni]
+## Conclusioni
 
 Per il testing delle query in maniera sintetica è stato utilizzato
 **Postman**, una piattaforma create appositamente per testare le API
