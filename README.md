@@ -37,7 +37,7 @@ Jasprit Singh - 305884
 
 Cipelli Lorenzo -- 305784
 
-[]{#Introduzione .anchor}Introduzione
+[Introduzione]
 
 Le blockchain sono come dei "libri mastri" per immagazzinare
 informazioni su transazioni. Questi dati sono raccolti all'interno di
@@ -60,8 +60,7 @@ Tenendo conto di questa limitazioni introduciamo ciò intorno cui il
 nostro progetto ruota: **Blockchain Database**.
 
 ![Diagram Description automatically
-generated](assets/media/image2.png){width="3.5833333333333335in"
-height="4.109914698162729in"}
+generated](assets/media/image2.png)
 
 Trattasi la nostra di una implementazione non decentralizzata che
 facilita lo scenario di messa in funzione, grazie a questa struttura è
@@ -74,7 +73,7 @@ logicamente "unidirezionali", nel senso che vanno solo da docente a
 studente, infatti è solo lo studente che può ricevere i voti e il
 docente che può caricarli.
 
-[]{#Struttura_Blocco .anchor}Struttura del blocco
+[Struttura del blocco]
 
 Come già detto i blocchi sono collegati fra di loro grazie a delle firme
 (digest) che vengono prodotti nel momento della validazione del blocco,
@@ -115,35 +114,29 @@ colorati in **verde** corrispondono all'headern del blocco, il punto in
 ![Three blocks show some metadata and transactions. Each block contains
 a hash. The following block has a field called prevHash linking back to
 the previous
-block.](assets/media/image3.png){width="5.625001093613299in"
-height="1.40625in"}
+block.]
+(assets/media/image3.png)
 
-[]{#Funzionamento_Programma .anchor}Funzionamento Programma
+[Funzionamento Programma]
 
-![](assets/media/image4.png){width="4.53125in"
-height="6.03125in"}![](assets/media/image5.png){width="2.689583333333333in"
-height="5.833333333333333in"}
+![](assets/media/image4.png)
+![](assets/media/image5.png)
 
-[]{#Navigazione_Studente
-.anchor}![](assets/media/image7.png){width="4.895833333333333in"
-height="4.625in"}Navigazione come Studente
+![](assets/media/image7.png)
+Navigazione come Studente
 
-![](assets/media/image8.png){width="4.71875in"
-height="2.8541666666666665in"}
+![](assets/media/image8.png)
 
-![](assets/media/image9.png){width="4.864583333333333in"
-height="2.125in"}![](assets/media/image10.png){width="4.833333333333333in"
-height="3.1458333333333335in"}
+![](assets/media/image9.png)
+![](assets/media/image10.png)
 
-[]{#Navigazione_Docente .anchor}Navigazione come Docente
+[]Navigazione come Docente
 
-![](assets/media/image11.png){width="5.104166666666667in"
-height="8.0in"}
+![](assets/media/image11.png)
 
-![](assets/media/image15.png){width="5.083333333333333in"
-height="2.2604166666666665in"}
+![](assets/media/image15.png)
 
-[]{#Database .anchor}Database
+[Database]
 
 In questo paragrafo saranno visitate le strutture della collections
 usate per immagazzinare i dati del programma. Parliamo di collections in
@@ -154,8 +147,8 @@ esempio i docenti che insegnano una materia).
 
 Le collections utilizzate sono state:
 
--   ![](assets/media/image16.png){width="2.6979166666666665in"
-    height="4.333333333333333in"}**courses**: collection utilizzata per
+![](assets/media/image16.png)
+-   **courses**: collection utilizzata per
     immagazzinare i vari corsi disponibili e i professori che lo
     insegnano, questa struttura non verrà mai modificata nel corso del
     programma, dovrà essere l'amministratore del database ad entrare
@@ -167,16 +160,12 @@ Le collections utilizzate sono state:
     univocamente dall'id del blocco e sono fondamentali per verbalizzare
     i voti e tenere contro del numero di iscrizioni ad un appello;
 
-![](assets/media/image18.png){width="2.9479166666666665in"
-height="1.5833333333333333in"}
-
+![](assets/media/image18.png)
 -   **exams**: troviamo tutti gli appelli di esami che sono al momento
     organizzati da ogni docente, possono esserci più appelli
     contemporaneamente della stessa materia;
 
-![](assets/media/image19.png){width="3.34375in"
-height="9.208333333333334in"}
-
+![](assets/media/image19.png)
 -   **grades**: questa è la vera e propria blockchain, come vediamo il
     blocco successivo (posizionato sotto) è legato a quello precedente
     (blocco sopra) tramite il previousHash, il resto della struttura è
@@ -197,7 +186,7 @@ height="9.208333333333334in"}
     il ruolo, anche in questo caso, se si vuole aggiungere un docente
     dovrà intervanire un amministratore del DBMS;
 
-[]{#Conlusioni .anchor}Conclusioni
+[Conclusioni]
 
 Per il testing delle query in maniera sintetica è stato utilizzato
 **Postman**, una piattaforma create appositamente per testare le API
