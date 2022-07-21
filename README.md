@@ -113,8 +113,7 @@ colorati in **verde** corrispondono all'headern del blocco, il punto in
 ![Three blocks show some metadata and transactions. Each block contains
 a hash. The following block has a field called prevHash linking back to
 the previous
-block.]
-(assets/media/image3.png)
+block.](assets/media/image3.png)
 
 ## Funzionamento Programma
 
